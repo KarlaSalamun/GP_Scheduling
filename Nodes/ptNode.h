@@ -20,8 +20,8 @@ class ptNode : public AbstractNode {
             copy = new ptNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
-            return task.duration;
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
+            return task->duration;
         }
 };
 

@@ -16,6 +16,9 @@ add_executable(GP_scheduling main.cpp
         TreeConstructor.h TreeConstructor.cpp
         Nodes/AbstractNode.h Nodes/AbstractNode.cpp
         ../function.h ../function.cpp
+        EvaluateHeuristic.h EvaluateHeuristic.cpp
+        TaskCreator.h TaskCreator.cpp
+        Task.h Task.cpp
         Nodes/AddNode.cpp Nodes/AddNode.h
         Nodes/ddNode.cpp Nodes/ddNode.h
         Nodes/DivNode.cpp Nodes/DivNode.h

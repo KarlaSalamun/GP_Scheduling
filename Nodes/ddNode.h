@@ -20,8 +20,8 @@ class ddNode : public AbstractNode {
             copy = new ddNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
-            return task.due_date;
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
+            return task->due_date;
         }
 };
 

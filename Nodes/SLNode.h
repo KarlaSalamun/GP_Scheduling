@@ -20,8 +20,8 @@ class SLNode : public AbstractNode {
             copy = new SLNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
-            return std::max( task.due_date - task.duration - task.time_started, 0. );
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
+            return std::max( task->due_date - task->duration - task->time_started, 0. );
         }
 };
 

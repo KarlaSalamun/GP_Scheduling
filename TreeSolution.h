@@ -19,7 +19,6 @@ public:
         sol.data = nullptr;
     }
 
-
     TreeSolution& operator = ( TreeSolution&& other )
     {
         if( &other == this ) {

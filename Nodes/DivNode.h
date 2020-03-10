@@ -21,7 +21,7 @@ class DivNode : public AbstractNode {
             copy = new DivNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task>processed_tasks ) {
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *>processed_tasks ) {
             return children[0]->calculate_priority( task, pending_tasks, processed_tasks ) /
                 children[1]->calculate_priority( task, pending_tasks, processed_tasks );
         }

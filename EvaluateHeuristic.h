@@ -8,16 +8,19 @@
 #include <vector>
 #include <queue>
 #include "Task.h"
+#include "TaskCreator.h"
+#include "TreeSolution.h"
+#include "Nodes/AbstractNode.h"
 #include "../function.h"
 
 class EvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
-        EvaluateHeuristic( std::vector<Task> pending_tasks ) : pending_tasks( pending_tasks ) {}
+        EvaluateHeuristic() {}
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
-        void generate_tasks( int tasks_num );
-        std::vector<Task> pending_tasks;
+        std::vector<Task *> pending_tasks;
     private:
-        std::vector<Task> processed_tasks;
+        std::vector<Task *> processed_tasks;
+        static int compare_priority( const void *t1, const void *t2 );
 };
 
 

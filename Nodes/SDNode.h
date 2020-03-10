@@ -20,15 +20,15 @@ class SDNode : public AbstractNode {
             copy = new SDNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
             double sum = 0;
 
             for( auto & element : pending_tasks ) {
-                sum+=element.due_date;
+                sum+=element->due_date;
             }
 
             for( auto & element : processed_tasks ) {
-                sum+=element.due_date;
+                sum+=element->due_date;
             }
 
             return sum;

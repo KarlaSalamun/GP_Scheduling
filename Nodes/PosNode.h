@@ -20,7 +20,7 @@ class PosNode : public AbstractNode {
             copy = new PosNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
             return std::max( children[0]->calculate_priority( task, pending_tasks, processed_tasks ), 0. );
         }
 };

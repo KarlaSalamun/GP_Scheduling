@@ -20,11 +20,11 @@ class SPrNode : public AbstractNode {
             copy = new SPrNode( *this );
         }
 
-        double calculate_priority( Task &task, std::vector<Task> pending_tasks, std::vector<Task> processed_tasks ) {
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
 
             double sum = 0;
             for( auto & element : pending_tasks ) {
-                sum += element.duration;
+                sum += element->duration;
             }
             return sum;
         }

@@ -11,7 +11,7 @@
 
 template <typename T>
 void TreeSelection<T>::get_members( std::vector<T> &population, std::vector<T> &members ) {
-    std::vector<T> rand_members(4);
+    std::vector<T> rand_members(5);
 
     std::shuffle(population.begin(), population.begin() + 10, std::default_random_engine());
 
