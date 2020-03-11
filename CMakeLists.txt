@@ -16,7 +16,7 @@ add_executable(GP_scheduling main.cpp
         TreeConstructor.h TreeConstructor.cpp
         Nodes/AbstractNode.h Nodes/AbstractNode.cpp
         ../function.h ../function.cpp
-        EvaluateHeuristic.h EvaluateHeuristic.cpp
+        GPEvaluateHeuristic.h GPEvaluateHeuristic.cpp
         TaskCreator.h TaskCreator.cpp
         Task.h Task.cpp
         Nodes/AddNode.cpp Nodes/AddNode.h
@@ -29,4 +29,9 @@ add_executable(GP_scheduling main.cpp
         Nodes/SDNode.h Nodes/SDNode.cpp
         Nodes/SPrNode.cpp
         Nodes/SubNode.cpp
-        Nodes/WNode.cpp)
+        Nodes/WNode.cpp
+        Heuristics/SchedulingHeuristic.h Heuristics/SchedulingHeuristic.cpp
+        Heuristics/RMHeuristic.h Heuristics/RMHeuristic.cpp
+        Heuristics/EvaluateHeuristic.cpp Heuristics/EvaluateHeuristic.h
+        Heuristics/MONHeuristic.cpp Heuristics/MONHeuristic.h
+        Heuristics/WSPTHeuristic.cpp Heuristics/WSPTHeuristic.h)
