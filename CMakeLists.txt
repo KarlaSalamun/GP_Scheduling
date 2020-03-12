@@ -3,6 +3,10 @@ project(GP_scheduling)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(/usr/include/python2.7/)
+find_package(Python2 COMPONENTS Development NumPy)
+link_libraries(Python2::Python Python2::NumPy)
+
 add_executable(GP_scheduling main.cpp
         CrossoverOperator.cpp CrossoverOperator.h
         GeneticAlgorithm.h GeneticAlgorithm.cpp
@@ -34,4 +38,7 @@ add_executable(GP_scheduling main.cpp
         Heuristics/RMHeuristic.h Heuristics/RMHeuristic.cpp
         Heuristics/EvaluateHeuristic.cpp Heuristics/EvaluateHeuristic.h
         Heuristics/MONHeuristic.cpp Heuristics/MONHeuristic.h
-        Heuristics/WSPTHeuristic.cpp Heuristics/WSPTHeuristic.h)
+        Heuristics/WSPTHeuristic.cpp Heuristics/WSPTHeuristic.h
+        Heuristics/EDDHeuristic.cpp Heuristics/EDDHeuristic.h
+        Heuristics/HODGHeuristic.cpp Heuristics/HODGHeuristic.h
+        matplotlibcpp.h)

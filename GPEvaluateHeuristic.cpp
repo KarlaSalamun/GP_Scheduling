@@ -14,14 +14,16 @@ struct {
     }
 } customLess;
 
-double GPEvaluateHeuristic::get_value(TreeSolution<AbstractNode *> &solution )
+double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
 {
-    TaskCreator *tc = new TaskCreator( 50, 0.6, 0.6 );
-    // TaskCreator( int task_number, double dd_range, double dd_tightness )
+    //TaskCreator *tc = new TaskCreator( 50, 0.6, 0.6 );
+    //TaskCreator( int task_number, double dd_range, double dd_tightness )
     double twt = 0;
     double time = 0;
 
-    tc->create_test_set( pending_tasks );
+    pending_tasks = test_tasks;
+
+    //tc->create_test_set( pending_tasks );
 
     while( pending_tasks.size() > 0 ) {
         for( int i=0; i<pending_tasks.size(); i++ ) {

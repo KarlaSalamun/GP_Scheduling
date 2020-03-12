@@ -11,13 +11,13 @@
 
 class EvaluateHeuristic {
     public:
-        EvaluateHeuristic() {}
+        EvaluateHeuristic( std::vector<Task *> test_tasks ) : test_tasks( std::move( test_tasks ) ) {}
         double calculate_twt();
-        std::vector<Task *> pending_tasks;
-        SchedulingHeuristic *heuristic;
+        SchedulingHeuristic *heuristic{};
     private:
+        std::vector<Task *> test_tasks;
         std::vector<Task *> processed_tasks;
-        static int compare_priority( const void *t1, const void *t2 );
+        std::vector<Task *> pending_tasks;
 };
 
 

@@ -15,13 +15,16 @@ struct {
 
 double EvaluateHeuristic::calculate_twt()
 {
+
+    pending_tasks = test_tasks;
+
     TaskCreator *tc = new TaskCreator( 50, 0.6, 0.6 );
     // TaskCreator( int task_number, double dd_range, double dd_tightness )
 
     double twt = 0;
     double time = 0;
 
-    tc->create_test_set( pending_tasks );
+    //tc->create_test_set( pending_tasks );
 
     heuristic->set_params( pending_tasks );
 

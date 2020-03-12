@@ -66,7 +66,7 @@ void GeneticAlgorithm<T>::get_solution ( std::vector<T> &population, T& result )
         for ( size_t j=0; j<new_population.size(); j++ ) {
             population.push_back(move(new_population[j]));
         }
-        printf("generation[%lu]\tbest members: %f %f \n", i, population[0].fitness, population[1].fitness );
+        //printf("generation[%lu]\tbest members: %f %f \n", i, population[0].fitness, population[1].fitness );
     }
     evaluate_population(population );
     //result.fitness = population[0].fitness;
