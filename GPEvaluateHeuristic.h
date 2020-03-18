@@ -17,7 +17,11 @@
 class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
         explicit GPEvaluateHeuristic( std::vector<Task *> test_tasks ) : test_tasks(std::move( test_tasks )) {}
+        GPEvaluateHeuristic() {}
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
+        void set_test_tasks( std::vector<Task *> tasks ) {
+            test_tasks = tasks;
+        }
     private:
         std::vector<Task *> test_tasks;
         std::vector<Task *> pending_tasks;

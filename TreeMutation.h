@@ -14,6 +14,11 @@ class TreeMutation : public MutationOperator<T> {
 public:
     virtual ~TreeMutation() {}
     void mutate_solution ( T &solution );
+    void set_depth( int depth ) {
+        max_depth = depth;
+    }
+private:
+    int max_depth = 3;
 };
 
 

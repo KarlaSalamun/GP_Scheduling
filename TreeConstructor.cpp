@@ -226,6 +226,24 @@ void TreeConstructor::rehash_tree( AbstractNode *&root )
     }
 }
 
+void TreeConstructor::get_depth( AbstractNode *&root )
+{
+    if( root == nullptr ) {
+        return;
+    }
+
+    if( root->is_terminal ) {
+        root->depth = 1;
+    }
+
+    else {
+        root->depth += 1;
+        for( int i=0; i<root->children.size(); i++ ) {
+            get_depth( root->children[i] );
+        }
+    }
+}
+
 // TODO napravi BFS pomocnu funkciju koja radi obilazak stabla
 void TreeConstructor::draw_tree( AbstractNode *&root, std::string filename )
 {

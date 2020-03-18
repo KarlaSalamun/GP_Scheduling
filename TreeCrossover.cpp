@@ -14,9 +14,11 @@ void TreeCrossover<T>::get_children( std::vector<T> &parents, std::vector<T> &ch
 
     int rand_depth = rand() % parents[0].data->depth;
     AbstractNode *random_tree1 = parents[0].data->pick_random(parents[0].data, rand_depth);
+    tc->get_depth( random_tree1 );
 
     rand_depth = rand() % parents[1].data->depth;
     AbstractNode *random_tree2 = parents[1].data->pick_random(parents[1].data, rand_depth);
+    tc->get_depth( random_tree2 );
 
     if ( random_tree1->children_number == 0 || random_tree2->children_number == 0 ) {
 
@@ -31,11 +33,11 @@ void TreeCrossover<T>::get_children( std::vector<T> &parents, std::vector<T> &ch
     }
 
 
-    if( parents[0].data->depth - random_tree1->depth + random_tree2->depth > 5 ) {
+    if( parents[0].data->depth - random_tree1->depth + random_tree2->depth > max_depth ) {
 
         children[0] = parents[0];
 
-        if (parents[1].data->depth - random_tree2->depth + random_tree1->depth > 5) {
+        if (parents[1].data->depth - random_tree2->depth + random_tree1->depth > max_depth ) {
             children[1]= move( parents[1] );
         } else {
             children[1] = move( parents[0] );

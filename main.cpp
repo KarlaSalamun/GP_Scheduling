@@ -1,3 +1,4 @@
+#include <memory>
 #include "TreeConstructor.h"
 #include "TreeSolution.h"
 #include "GPEvaluateHeuristic.h"
@@ -20,30 +21,106 @@
 
 namespace plt = matplotlibcpp;
 
+void test_generations( int max_generations );
+void test_populations();
+void test_tree_depth();
+void test_set_size();
+
 int main( void )
 {
     srand(static_cast<double> (0));
-    //srand(static_cast<double> (time(NULL)) );
+//    srand(static_cast<double> (time(NULL)) );
 
-    TreeConstructor *tc = new TreeConstructor();
     TreeSolution<AbstractNode *> solution;
 
-    std::vector<Task *>test_tasks;
+//    test_generations( 100 );
+//        test_populations();
+//    test_tree_depth();
+    test_set_size();
+//    std::vector<double> train_results(10);
+//    std::vector<double> test_results(10);
+//    std::vector<double> generations;
 
-    int population_size = 10;
-    int generation_number = 10;
+//    for( int i=0; i<10; i++ ) {
+//
+//        generation_number = ( i + 1 ) * 10;
+//        generations.push_back(static_cast<double> ( generation_number ) );
+//        std::vector<TreeSolution<AbstractNode *>>tmp_population( population_size );
+//        tmp_population = population;
+//
+//        std::unique_ptr<GeneticAlgorithm<TreeSolution<AbstractNode *>>> ga =
+//                std::make_unique<GeneticAlgorithm<TreeSolution<AbstractNode *>>>(
+//                        crossover, mutation, selection, train_function, generation_number, population_size, 0 );
+//        ga->get_solution( tmp_population, result );
+//        train_results[i] = train_function->get_value( result );
+//        test_results[i] = test_function->get_value( result );
+//    }
+
+//    plt::named_plot( "train set", generations, train_results );
+//    plt::named_plot( "test set", generations, test_results );
+//    plt::legend();
+//    plt::save("./1000_generations.png");
+//    plt::show();
+
+
+//    tc->draw_tree( result.data, "after.dot" );
+
+
+
+//   RMHeuristic *rm = new RMHeuristic();
+//   evaluator->heuristic = rm;
+//   double twt_rm = evaluator->calculate_twt();
+//
+//   MONHeuristic *mon = new MONHeuristic();
+//   evaluator->heuristic = mon;
+//   double twt_mon = evaluator->calculate_twt();
+//
+//   WSPTHeuristic *wspt = new WSPTHeuristic();
+//   evaluator->heuristic = wspt;
+//   double twt_wspt = evaluator->calculate_twt();
+
+//   std::vector<double> solutions;
+//   ga->get_best_solutions( solutions );
+
+
+//
+//   plt::plot( solutions );
+//   plt::show();
+
+//   double twt_gp = test_function->get_value( result );
+//
+//    GPEvaluateHeuristic *test_function2 = new GPEvaluateHeuristic();
+//    test_function2->set_test_tasks( train_tasks );
+//
+//    double twt_2 = test_function2->get_value( result );
+//
+//   printf( "GP heuristika\ttwt = %lf\n", twt_gp );
+//   printf( "drugi set:\ttwt = %lf\n", twt_2 );
+//   printf("RM heuristika\ttwt = %lf\n", twt_rm );
+//   printf( "MON heuristika\ttwt = %lf\n", twt_mon );
+//   printf( "WSPT heuristika\ttwt = %lf\n", twt_wspt );
+
+   return 0;
+}
+
+void test_generations( int max_generations )
+{
+    TreeConstructor *tc = new TreeConstructor();
 
     TreeSolution<AbstractNode *>result;
 
-    std::vector<TreeSolution<AbstractNode *>>population( population_size );
+    std::vector<Task *>test_tasks;
+    std::vector<Task *>train_tasks;
+
+    TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
+    task_creator->create_test_set( test_tasks );
+    task_creator->create_test_set( train_tasks );
+
+    int population_size = 10;
+    std::vector<TreeSolution<AbstractNode *>> population( population_size );
     for( int i=0; i<population_size; i++ ) {
         tc->construct_tree_grow( 5, population[i].data );
     }
-
-    tc->draw_tree( population[0].data, "first.dot" );
-
-    TaskCreator *task_creator = new TaskCreator( 50, 0.6, 0.6 );
-    task_creator->create_test_set( test_tasks );
 
     TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
@@ -51,42 +128,199 @@ int main( void )
 
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
 
+    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+
     GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, test_function, generation_number, population_size, 0 );
+            mutation, selection, test_function, train_function, max_generations, population_size, 0 );
 
     ga->get_solution( population, result );
 
-    tc->draw_tree( result.data, "after.dot" );
+    std::vector<double> train_solutions;
+    std::vector<double> test_solutions;
 
-    EvaluateHeuristic *evaluator = new EvaluateHeuristic( test_tasks );
+    ga->get_train_solutions( train_solutions );
+    ga->get_test_solutions( test_solutions );
 
-   RMHeuristic *rm = new RMHeuristic();
-   evaluator->heuristic = rm;
-   double twt_rm = evaluator->calculate_twt();
+    plt::named_plot( "train set", train_solutions );
+    plt::named_plot( "test set", test_solutions );
+    plt::legend();
+    plt::show();
+}
 
-   MONHeuristic *mon = new MONHeuristic();
-   evaluator->heuristic = mon;
-   double twt_mon = evaluator->calculate_twt();
+void test_populations()
+{
+    vector<int> population_size{ 10, 20, 50, 100, 150, 200 };
+//    vector<int> population_size{ 10, 20 };
 
-   WSPTHeuristic *wspt = new WSPTHeuristic();
-   evaluator->heuristic = wspt;
-   double twt_wspt = evaluator->calculate_twt();
+    TreeConstructor *tc = new TreeConstructor();
 
-//   HODGHeuristic *hodg = new HODGHeuristic();
-//   evaluator->heuristic = hodg;
-//   double twt_hodg = evaluator->calculate_twt();
+    TreeSolution<AbstractNode *>result;
 
-   //EDDHeuristic *edd = new EDDHeuristic();
+    std::vector<Task *>test_tasks;
+    std::vector<Task *>train_tasks;
 
-   GPEvaluateHeuristic *gp = new GPEvaluateHeuristic( test_tasks );
-   double twt_gp = gp->get_value( result );
+    std::vector<double> test_results;
+    std::vector<double> train_results;
 
-   printf( "GP heuristika\ttwt = %lf\n", twt_gp );
-   printf("RM heuristika\ttwt = %lf\n", twt_rm );
-   printf( "MON heuristika\ttwt = %lf\n", twt_mon );
-   printf( "WSPT heuristika\ttwt = %lf\n", twt_wspt );
+    TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
+    task_creator->create_test_set( test_tasks );
+    task_creator->create_test_set( train_tasks );
 
-   double min_twt;
+    int generation_number = 50;
 
-   return 0;
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+
+    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
+    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+
+
+
+    for( auto & size : population_size ) {
+
+        std::vector<TreeSolution<AbstractNode *>> population( size );
+
+        for( int i=0; i<population.size(); i++ ) {
+            tc->construct_tree_grow( 5, population[i].data );
+        }
+
+        GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+                mutation, selection, test_function, train_function, generation_number, size, 0 );
+
+        ga->get_solution( population, result );
+
+        train_results.push_back( train_function->get_value( result ) );
+        test_results.push_back( test_function->get_value( result ) );
+
+        delete ga;
+    }
+
+//    plt::plot( population_size, train_results );
+
+        std::vector<double> x( population_size.begin(), population_size.end() );
+
+        plt::named_plot( "train set", x, train_results );
+        plt::named_plot( "test set", x, test_results );
+        plt::legend();
+    plt::show();
+}
+
+void test_tree_depth()
+{
+    vector<int> tree_depth{ 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20 };
+//    vector<int> tree_depth{ 3, 5, 8 };
+
+    TreeConstructor *tc = new TreeConstructor();
+
+    TreeSolution<AbstractNode *>result;
+
+    std::vector<Task *>test_tasks;
+    std::vector<Task *>train_tasks;
+
+    std::vector<double> test_results;
+    std::vector<double> train_results;
+
+    TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
+    task_creator->create_test_set( test_tasks );
+    task_creator->create_test_set( train_tasks );
+
+    int generation_number = 50;
+    int population_size = 10;
+
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+
+    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
+    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+
+    for( auto & depth : tree_depth ) {
+
+        std::vector<TreeSolution<AbstractNode *>> population( population_size );
+
+        for( int i=0; i<population.size(); i++ ) {
+            tc->construct_tree_grow( depth, population[i].data );
+        }
+
+        crossover->set_depth( depth );
+        mutation->set_depth( depth );
+
+        GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+                mutation, selection, test_function, train_function, generation_number, population_size, 0 );
+
+        ga->get_solution( population, result );
+
+        train_results.push_back( train_function->get_value( result ) );
+        test_results.push_back( test_function->get_value( result ) );
+
+        delete ga;
+    }
+
+//    plt::plot( population_size, train_results );
+
+    std::vector<double> x( tree_depth.begin(), tree_depth.end() );
+
+    plt::named_plot( "train set", x, train_results );
+    plt::named_plot( "test set", x, test_results );
+    plt::legend();
+    plt::show();
+}
+
+void test_set_size()
+{
+    vector<int> set_size{ 12, 25, 50, 100 };
+//    vector<int> tree_depth{ 3, 5, 8 };
+
+    TreeConstructor *tc = new TreeConstructor();
+
+    TreeSolution<AbstractNode *>result;
+
+    std::vector<Task *>test_tasks;
+    std::vector<Task *>train_tasks;
+
+    std::vector<double> test_results;
+    std::vector<double> train_results;
+
+
+
+    int generation_number = 50;
+
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+
+    TaskCreator *task_creator2 = new TaskCreator( 12, 0.6, 0.6 );
+
+    task_creator2->create_test_set( test_tasks );
+    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
+
+
+    for( auto & size : set_size ) {
+
+        std::vector<TreeSolution<AbstractNode *>> population( 10 );
+
+        for( int i=0; i<population.size(); i++ ) {
+            tc->construct_tree_grow( 5, population[i].data );
+        }
+
+        TaskCreator *task_creator1 = new TaskCreator( size, 0.6, 0.6 );
+        task_creator1->create_test_set( train_tasks );
+
+        GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+
+        GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+                mutation, selection, test_function, train_function, generation_number, population.size(), 0 );
+
+        ga->get_solution( population, result );
+        test_results.push_back( test_function->get_value( result ) );
+    }
+
+//    plt::plot( population_size, train_results );
+
+    std::vector<double> x( set_size.begin(), set_size.end() );
+
+    plt::named_plot( "test set", x, test_results );
+    plt::legend();
+    plt::show();
 }

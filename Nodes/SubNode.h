@@ -14,6 +14,7 @@ class SubNode : public AbstractNode {
             children_number = 2;
             children.assign( children_number, nullptr );
             name = "Sub";
+            depth = 0;
         }
 
         void copy_node( AbstractNode *&copy ) override {

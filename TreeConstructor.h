@@ -31,6 +31,7 @@ class TreeConstructor {
         void rehash_tree( AbstractNode *&root );
         void draw_tree( AbstractNode *&root, std::string filename );
         void check_tree(AbstractNode *&root, int depth);
+        void get_depth( AbstractNode *&root );
 };
 
 

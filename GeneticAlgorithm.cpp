@@ -15,7 +15,7 @@ template <typename T>
  void GeneticAlgorithm<T>::evaluate_population(std::vector<T> &population )
 {
     for ( size_t i=0; i<population.size(); i++ ) {
-        population[i].fitness = test_function->get_value( population[i] );
+        population[i].fitness = train_function->get_value( population[i] );
     }
 
     qsort( population.data(), population.size(), sizeof(T), compare_members<T> );
@@ -66,11 +66,23 @@ void GeneticAlgorithm<T>::get_solution ( std::vector<T> &population, T& result )
         for ( size_t j=0; j<new_population.size(); j++ ) {
             population.push_back(move(new_population[j]));
         }
-        //printf("generation[%lu]\tbest members: %f %f \n", i, population[0].fitness, population[1].fitness );
+        printf("generation[%lu]\tbest members: %f %f \n", i, population[0].fitness, population[1].fitness );
+        train_solutions.push_back( population[0].fitness );
+        test_solutions.push_back( test_function->get_value( population[0] ) );
     }
     evaluate_population(population );
-    //result.fitness = population[0].fitness;
     result = move( population[0] );
+    result.fitness = population[0].fitness;
 }
 
+template <typename T>
+void GeneticAlgorithm<T>::get_train_solutions(std::vector<double> &solutions)
+{
+    solutions = train_solutions;
+}
 
+template <typename T>
+void GeneticAlgorithm<T>::get_test_solutions(std::vector<double> &solutions)
+{
+    solutions = test_solutions;
+}

@@ -25,21 +25,25 @@ template <typename T>
 class GeneticAlgorithm  {
     public:
         GeneticAlgorithm( CrossoverOperator<T> *crossover, MutationOperator<T> *mutation,
-                SelectionOperator<T> *selection, Function<T> *test_function, unsigned int generation_number,
-                size_t population_size, unsigned int dim_size ) :
+                SelectionOperator<T> *selection, Function<T> *test_function, Function<T> *train_function,
+                int generation_number, size_t population_size, unsigned int dim_size ) :
             crossover(crossover), mutation(mutation), selection(selection), test_function(test_function),
-            generation_number(generation_number), population_size(population_size), dim_size(dim_size) {}
+            train_function(train_function), generation_number(generation_number),
+            population_size(population_size), dim_size(dim_size) {}
 
         ~GeneticAlgorithm()
         {
-            delete test_function;
-            delete crossover;
-            delete mutation;
-            delete selection;
-
+//            delete test_function;
+//            delete crossover;
+//            delete mutation;
+//            delete selection;
         }
 
+        Function<T> *test_function = nullptr;
+        Function<T> *train_function = nullptr;
         void get_solution ( std::vector<T> &population, T& result );
+        void get_train_solutions( std::vector<double> &solutions );
+        void get_test_solutions( std::vector<double> &solutions );
         void set_crossover ( CrossoverOperator<T> *crossover )
         {
             delete this->crossover;
@@ -55,16 +59,17 @@ class GeneticAlgorithm  {
             delete this->selection;
             this->selection = selection;
         }
-private:
+    private:
         void evaluate_population ( std::vector<T> &population );
         void add_members( std::vector<T> &population,std::vector<T> &members );
         CrossoverOperator<T> *crossover;
         MutationOperator<T> *mutation = nullptr;
         SelectionOperator<T> *selection = nullptr;
-        Function<T> *test_function = nullptr;
         unsigned int generation_number;
         size_t population_size;
         unsigned int dim_size;
+        std::vector<double> train_solutions;
+        std::vector<double> test_solutions;
 };
 
 

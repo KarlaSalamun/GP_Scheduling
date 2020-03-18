@@ -15,6 +15,7 @@ class DivNode : public AbstractNode {
             children_number = 2;
             children.assign( children_number, nullptr );
             name = "Div";
+            depth = 0;
         }
 
         void copy_node( AbstractNode *&copy ) override {

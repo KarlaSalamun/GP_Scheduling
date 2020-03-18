@@ -8,8 +8,6 @@
 #include "TreeConstructor.h"
 #include <iostream>
 
-#define MAX_SUBTREE_DEPTH 3
-
 // replaces random node with randomly generated subtree
 
 template <typename T>
@@ -32,7 +30,7 @@ void TreeMutation<T>::mutate_solution ( T &solution )
         std::cout << "NULL8" << endl;
     }
 
-    tc->construct_tree_grow( rand() % MAX_SUBTREE_DEPTH + 1, new_node );
+    tc->construct_tree_grow( rand() % max_depth + 1, new_node );
 
     solution.data->replace_random( new_node );
     delete new_node;

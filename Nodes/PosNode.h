@@ -14,6 +14,7 @@ class PosNode : public AbstractNode {
             children_number = 1;
             children.assign( children_number, nullptr );
             name = "Pos";
+            depth = 0;
         }
 
         void copy_node( AbstractNode *&copy ) override {

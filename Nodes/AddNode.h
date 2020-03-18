@@ -15,6 +15,7 @@ class AddNode : public AbstractNode {
             children_number = 2;
             children.assign( children_number, nullptr );
             name = "Add";
+            depth = 0;
         }
 
         void copy_node( AbstractNode *&copy ) override {
