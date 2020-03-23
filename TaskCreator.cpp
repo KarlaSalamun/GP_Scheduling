@@ -3,6 +3,7 @@
 //
 
 #include <random>
+#include <cstdio>
 #include "TaskCreator.h"
 
 void TaskCreator::create_test_set( std::vector<Task *> &test_tasks )
@@ -27,5 +28,13 @@ void TaskCreator::create_test_set( std::vector<Task *> &test_tasks )
     for( int i=0; i<test_tasks.size(); i++ ) {
 //        test_tasks[i]->due_date = sum_1 + static_cast<double>( rand() / static_cast<double>(RAND_MAX) ) * ( sum_2 - sum_1 );
         test_tasks[i]->due_date = dis(gen);
+    }
+}
+
+void TaskCreator::write_tasks( std::vector<Task *>  &test_tasks )
+{
+    FILE *fd = fopen( "task_set.txt", "w+" );
+    for( auto & element: test_tasks ) {
+        fprintf( fd, "%f %f %d\n", element->due_date, element->weight, element->duration );
     }
 }

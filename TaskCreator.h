@@ -29,6 +29,8 @@ class TaskCreator {
         }
 
         void create_test_set( std::vector<Task *> &test_tasks );
+        void write_tasks( std::vector<Task *>  &test_tasks );
+
         int task_number;
         double dd_range;
         double dd_tightness;
