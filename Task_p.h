@@ -9,36 +9,45 @@
 
 class Task_p : public Task  {
     public:
+        int id;
         double phase;
         int instance;
-        int id;
         double period;
         double arrival_time;
-        double abs_due_date;
-        double rel_due_date;
-        double time_ended;
-        double tardiness;
-        double remaining;
         bool isPreempted;
+        double tardiness;
+        double time_ended;
 
         double compute_tardiness();
-        void update_tardiness( double time );
-        void set_arrival_time();
         void set_abs_dd();
-        void update_params();
         bool isReady( double time );
-        bool isFinished( double time );
         void inc_instance();
+        bool isFinished( double time );
+        void update_tardiness( double time );
+        void reset_params();
+        void set_arrival_time();
         void set_remaining( double time );
 
-        Task_p( double phase, int instance, double period, double rel_due_date ) :
-                phase( phase ), instance( instance ), period( period ), rel_due_date( rel_due_date )
+        Task_p( double phase, int instance, double period ) :
+                phase( phase ), instance( instance ), period( period )
         {
             tardiness = 0;
             isPreempted = false;
+            due_date = period;
+            weight = 1;
         }
-        Task_p() {}
+        Task_p() {
+            tardiness = 0;
+            isPreempted = false;
+            due_date = period;
+            weight = 1;
+        }
         ~Task_p() {}
+private:
+    double abs_due_date;
+    double remaining;
+
+    void update_params();
 };
 
 

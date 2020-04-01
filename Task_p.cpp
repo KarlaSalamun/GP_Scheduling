@@ -5,6 +5,7 @@
 #include "Task_p.h"
 #include <cmath>
 #include <math.h>
+#include <cstdio>
 
 double Task_p::compute_tardiness()
 {
@@ -19,7 +20,7 @@ void Task_p::set_arrival_time()
 
 void Task_p::set_abs_dd()
 {
-    abs_due_date = phase + ( instance - 1 ) * period + rel_due_date;
+    abs_due_date = phase + ( instance - 1 ) * period + due_date;
 }
 
 void Task_p::update_params()
@@ -47,6 +48,7 @@ bool Task_p::isFinished( double time )
 void Task_p::update_tardiness( double time )
 {
     if( time > abs_due_date ) {
+        printf("yo");
         tardiness += time - abs_due_date;
     }
 }
@@ -59,4 +61,13 @@ void Task_p::inc_instance()
 void Task_p::set_remaining( double time )
 {
     remaining = time_started + duration - time;
+}
+
+void Task_p::reset_params()
+{
+    instance = 1;
+    isPreempted = false;
+    arrival_time = phase;
+    set_abs_dd();
+    tardiness = 0;
 }

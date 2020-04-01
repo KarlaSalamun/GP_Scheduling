@@ -14,18 +14,20 @@
 #include "Nodes/AbstractNode.h"
 #include "../function.h"
 
+template <typename T>
 class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
-        explicit GPEvaluateHeuristic( std::vector<Task *> test_tasks ) : test_tasks(std::move( test_tasks )) {}
+        explicit GPEvaluateHeuristic( std::vector<T> test_tasks ) : test_tasks(std::move( test_tasks )) {}
         GPEvaluateHeuristic() {}
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
-        void set_test_tasks( std::vector<Task *> tasks ) {
+        void set_test_tasks( std::vector<T> tasks ) {
             test_tasks = tasks;
         }
+        bool periodic;
     private:
-        std::vector<Task *> test_tasks;
-        std::vector<Task *> pending_tasks;
-        std::vector<Task *> processed_tasks;
+        std::vector<T> test_tasks;
+        std::vector<T> pending_tasks;
+        std::vector<T> processed_tasks;
         static int compare_priority( const void *t1, const void *t2 );
 };
 

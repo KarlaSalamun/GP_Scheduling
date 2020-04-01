@@ -11,6 +11,7 @@
 #include "TreeSelection.cpp"
 #include "TreeSolution.cpp"
 #include "GeneticAlgorithm.cpp"
+#include "GPEvaluateHeuristic.cpp"
 #include "Heuristics/EvaluateHeuristic.h"
 #include "Heuristics/RMHeuristic.h"
 #include "Heuristics/MONHeuristic.h"
@@ -32,15 +33,46 @@ int main( void )
 //    srand(static_cast<double> (0));
     srand(static_cast<double> (time(NULL)) );
 
+    TreeConstructor *tc = new TreeConstructor();
+
     TreeSolution<AbstractNode *> solution;
 
     std::vector<Task_p *>test_tasks;
+    std::vector<Task_p *>train_tasks;
 
-    TaskCreator *tc = new TaskCreator( 12, 0.6, 0.6 );
-    tc->periodic = true;
-    tc->create_periodic_test_set( test_tasks );
+    TreeSolution<AbstractNode *>result;
 
-    tc->write_tasks_p( test_tasks );
+    TaskCreator *task_creator = new TaskCreator();
+    task_creator->periodic = true;
+    task_creator->set_task_number( 10 );
+    task_creator->create_periodic_test_set( test_tasks );
+    task_creator->create_periodic_test_set( train_tasks );
+
+    task_creator->write_tasks_p( test_tasks );
+
+    int population_size = 10;
+    std::vector<TreeSolution<AbstractNode *>> population( population_size );
+    for( int i=0; i<population_size; i++ ) {
+        tc->construct_tree_grow( 4, population[i].data );
+    }
+
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+
+    GPEvaluateHeuristic<Task_p *> *test_function = new GPEvaluateHeuristic<Task_p *>( test_tasks );
+    test_function->set_test_tasks( test_tasks );
+    test_function->periodic = true;
+
+    GPEvaluateHeuristic<Task_p *> *train_function = new GPEvaluateHeuristic<Task_p *>( train_tasks );
+    train_function->set_test_tasks( train_tasks );
+    train_function->periodic = true;
+
+    GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+            mutation, selection, test_function, train_function, 1, population_size, 0 );
+
+    ga->get_solution( population, result );
+
 
 //    test_generations( 50 );
 //        test_populations();
@@ -138,9 +170,9 @@ void test_generations( int max_generations )
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
+    GPEvaluateHeuristic<Task *> *test_function = new GPEvaluateHeuristic<Task *>( test_tasks );
 
-    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+    GPEvaluateHeuristic<Task *> *train_function = new GPEvaluateHeuristic<Task *>( train_tasks );
 
     GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
             mutation, selection, test_function, train_function, max_generations, population_size, 0 );
@@ -183,14 +215,14 @@ void test_populations()
 
     TreeSolution<AbstractNode *>result;
 
-    std::vector<Task *>test_tasks;
-    std::vector<Task *>train_tasks;
+    std::vector<Task *> test_tasks;
+    std::vector<Task *> train_tasks;
 
     std::vector<double> test_results;
     std::vector<double> train_results;
 
     TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
-    task_creator->create_test_set( test_tasks );
+    task_creator->create_test_set(test_tasks );
     task_creator->create_test_set( train_tasks );
 
     int generation_number = 50;
@@ -199,9 +231,8 @@ void test_populations()
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
-    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
-
+    GPEvaluateHeuristic<Task *> *test_function = new GPEvaluateHeuristic<Task *>( test_tasks );
+    GPEvaluateHeuristic<Task *> *train_function = new GPEvaluateHeuristic<Task *>( train_tasks );
 
 
     for( auto & size : population_size ) {
@@ -216,10 +247,10 @@ void test_populations()
                 mutation, selection, test_function, train_function, generation_number, size, 0 );
 
         ga->get_solution( population, result );
-
+/*
         train_results.push_back( train_function->get_value( result ) );
         test_results.push_back( test_function->get_value( result ) );
-
+*/
         delete ga;
     }
 
@@ -259,8 +290,8 @@ void test_tree_depth()
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
-    GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+    GPEvaluateHeuristic<Task *> *test_function = new GPEvaluateHeuristic<Task *>( test_tasks );
+    GPEvaluateHeuristic<Task *> *train_function = new GPEvaluateHeuristic<Task *>( train_tasks );
 
     for( auto & depth : tree_depth ) {
 
@@ -320,7 +351,7 @@ void test_set_size()
     TaskCreator *task_creator2 = new TaskCreator( 12, 0.6, 0.6 );
 
     task_creator2->create_test_set( test_tasks );
-    GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( test_tasks );
+    GPEvaluateHeuristic <Task *> *test_function = new GPEvaluateHeuristic<Task *>( test_tasks );
 
 
     for( auto & size : set_size ) {
@@ -334,7 +365,7 @@ void test_set_size()
         TaskCreator *task_creator1 = new TaskCreator( size, 0.6, 0.6 );
         task_creator1->create_test_set( train_tasks );
 
-        GPEvaluateHeuristic *train_function = new GPEvaluateHeuristic( train_tasks );
+        GPEvaluateHeuristic<Task *> *train_function = new GPEvaluateHeuristic<Task *>( train_tasks );
 
         GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
                 mutation, selection, test_function, train_function, generation_number, population.size(), 0 );

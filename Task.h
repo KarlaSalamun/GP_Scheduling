@@ -17,6 +17,7 @@ class Task {
 
         Task( double duration, double weight, double due_date ) :
             duration( duration ), due_date( due_date ), weight( weight ) {}
+
         Task() {}
         ~Task() {}
 

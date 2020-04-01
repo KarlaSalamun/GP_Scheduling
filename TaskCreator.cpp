@@ -52,7 +52,7 @@ void TaskCreator::create_periodic_test_set( std::vector<Task_p *> &test_tasks )
         assert( u_values[i]!=0 );
         test_tasks[i]->duration = u_values[i] * test_tasks[i]->period;
         // test_tasks[i]->rel_due_date = test_tasks[i]->period * dist_dd(e2);
-        test_tasks[i]->rel_due_date = test_tasks[i]->period;
+        test_tasks[i]->due_date = test_tasks[i]->period;
         test_tasks[i]->id = i;
 
     }
@@ -73,7 +73,7 @@ void TaskCreator::write_tasks_p( std::vector<Task_p *> &test_tasks )
     for( int i=0; i<test_tasks.size(); i++ ) {
         fprintf(fd, "%d %.2f %.2f %.2f %.2f\n",
                 test_tasks[i]->id, test_tasks[i]->phase, test_tasks[i]->period, test_tasks[i]->duration,
-                test_tasks[i]->rel_due_date);
+                test_tasks[i]->due_date);
     }
     fclose(fd);
 }
@@ -87,7 +87,7 @@ void TaskCreator::load_tasks_p( std::vector<Task_p *> &test_tasks )
     for( int i=0; i<test_tasks.size(); i++ ) {
         test_tasks[i] = std::move( new Task_p() );
         int retval = fscanf( fd, "%d %lf %lf %lf %lf",
-                &test_tasks[i]->id, &test_tasks[i]->phase, &test_tasks[i]->period, &test_tasks[i]->duration, &test_tasks[i]->rel_due_date );
+                &test_tasks[i]->id, &test_tasks[i]->phase, &test_tasks[i]->period, &test_tasks[i]->duration, &test_tasks[i]->due_date );
     }
     fclose(fd);
 }
@@ -109,14 +109,14 @@ void TaskCreator::load_tasks( std::vector<Task *> &test_tasks )
 
 std::vector<double> TaskCreator::UUnifast_generate_u( int n, double mean_u )
 {
-    std::vector<double> result(n);
+    std::vector<double> result;
+    result.assign( n, 0 );
     std::random_device rd;
     std::mt19937 e2(rd());
     std::uniform_real_distribution<> dist(0, 1);
     double sum_u = mean_u;
 
     for( int i=0; i<n-1; i++ ) {
-        // double exp =
         double next_sum_u = sum_u * pow( dist( e2 ), static_cast<double>( 1. / ( n-i ) ) );
         result[i] = sum_u - next_sum_u;
         assert( result[i]!=0 );
