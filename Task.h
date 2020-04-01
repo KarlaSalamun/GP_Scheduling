@@ -11,9 +11,9 @@ class Task {
         double priority;
         double due_date;
         double weight;
-        int duration;
+        double duration;
         double time_started;
-        double compute_tardiness();
+        virtual double compute_tardiness();
 
         Task( double duration, double weight, double due_date ) :
             duration( duration ), due_date( due_date ), weight( weight ) {}
@@ -56,6 +56,5 @@ class Task {
             return *this;
         }
 };
-
 
 #endif //GP_SCHEDULING_TASK_H

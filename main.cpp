@@ -25,18 +25,27 @@ void test_generations( int max_generations );
 void test_populations();
 void test_tree_depth();
 void test_set_size();
+void generate_csv( std::vector<double> results );
 
 int main( void )
 {
-    srand(static_cast<double> (0));
-//    srand(static_cast<double> (time(NULL)) );
+//    srand(static_cast<double> (0));
+    srand(static_cast<double> (time(NULL)) );
 
     TreeSolution<AbstractNode *> solution;
 
-//    test_generations( 100 );
+    std::vector<Task_p *>test_tasks;
+
+    TaskCreator *tc = new TaskCreator( 12, 0.6, 0.6 );
+    tc->periodic = true;
+    tc->create_periodic_test_set( test_tasks );
+
+    tc->write_tasks_p( test_tasks );
+
+//    test_generations( 50 );
 //        test_populations();
 //    test_tree_depth();
-    test_set_size();
+    //test_set_size();
 //    std::vector<double> train_results(10);
 //    std::vector<double> test_results(10);
 //    std::vector<double> generations;
@@ -114,12 +123,15 @@ void test_generations( int max_generations )
 
     TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
     task_creator->create_test_set( test_tasks );
+
     task_creator->create_test_set( train_tasks );
+    task_creator->write_tasks( train_tasks );
+    task_creator->load_tasks( train_tasks );
 
     int population_size = 10;
     std::vector<TreeSolution<AbstractNode *>> population( population_size );
     for( int i=0; i<population_size; i++ ) {
-        tc->construct_tree_grow( 5, population[i].data );
+        tc->construct_tree_grow( 4, population[i].data );
     }
 
     TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
@@ -133,23 +145,38 @@ void test_generations( int max_generations )
     GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
             mutation, selection, test_function, train_function, max_generations, population_size, 0 );
 
-    ga->get_solution( population, result );
 
     std::vector<double> train_solutions;
-    std::vector<double> test_solutions;
 
-    ga->get_train_solutions( train_solutions );
-    ga->get_test_solutions( test_solutions );
 
-    plt::named_plot( "train set", train_solutions );
-    plt::named_plot( "test set", test_solutions );
-    plt::legend();
-    plt::show();
+
+    for( int i=0; i<50; i++ ) {
+        for( int i=0; i<population_size; i++ ) {
+            tc->construct_tree_grow( 5, population[i].data );
+        }
+        ga->get_solution( population, result );
+        train_solutions.push_back( result.fitness );
+    }
+
+//    ga->get_solution( population, result );
+
+
+//    std::vector<double> test_solutions;
+
+    generate_csv( train_solutions );
+
+//    ga->get_train_solutions( train_solutions );
+//    ga->get_test_solutions( test_solutions );
+
+//    plt::named_plot( "train set", train_solutions );
+//    plt::named_plot( "test set", test_solutions );
+//    plt::legend();
+//    plt::show();
 }
 
 void test_populations()
 {
-    vector<int> population_size{ 10, 20, 50, 100, 150, 200 };
+    vector<int> population_size{ 10, 20, 50, 100 };
 //    vector<int> population_size{ 10, 20 };
 
     TreeConstructor *tc = new TreeConstructor();
@@ -323,4 +350,13 @@ void test_set_size()
     plt::named_plot( "test set", x, test_results );
     plt::legend();
     plt::show();
+}
+
+void generate_csv( std::vector<double> results )
+{
+    FILE *fd = fopen( "../test_results.csv", "w+" );
+    for( int i=0; i<results.size(); i++ ) {
+        fprintf( fd, "%d,%lf\n", i+1, results[i] );
+    }
+    fclose( fd );
 }

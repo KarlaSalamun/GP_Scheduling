@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <algorithm>
 #include "GPEvaluateHeuristic.h"
-
 struct {
     bool operator()(Task *a, Task *b) const
     {
