@@ -48,7 +48,7 @@ bool Task_p::isFinished( double time )
 void Task_p::update_tardiness( double time )
 {
     if( time > abs_due_date ) {
-        printf("yo");
+//        printf("yo");
         tardiness += time - abs_due_date;
     }
 }
@@ -63,11 +63,3 @@ void Task_p::set_remaining( double time )
     remaining = time_started + duration - time;
 }
 
-void Task_p::reset_params()
-{
-    instance = 1;
-    isPreempted = false;
-    arrival_time = phase;
-    set_abs_dd();
-    tardiness = 0;
-}

@@ -32,47 +32,47 @@ int main( void )
 {
 //    srand(static_cast<double> (0));
     srand(static_cast<double> (time(NULL)) );
+    test_generations(50);
 
-    TreeConstructor *tc = new TreeConstructor();
-
-    TreeSolution<AbstractNode *> solution;
-
-    std::vector<Task_p *>test_tasks;
-    std::vector<Task_p *>train_tasks;
-
-    TreeSolution<AbstractNode *>result;
-
-    TaskCreator *task_creator = new TaskCreator();
-    task_creator->periodic = true;
-    task_creator->set_task_number( 10 );
-    task_creator->create_periodic_test_set( test_tasks );
-    task_creator->create_periodic_test_set( train_tasks );
-
-    task_creator->write_tasks_p( test_tasks );
-
-    int population_size = 10;
-    std::vector<TreeSolution<AbstractNode *>> population( population_size );
-    for( int i=0; i<population_size; i++ ) {
-        tc->construct_tree_grow( 4, population[i].data );
-    }
-
-    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
-    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
-    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
-
-    GPEvaluateHeuristic<Task_p *> *test_function = new GPEvaluateHeuristic<Task_p *>( test_tasks );
-    test_function->set_test_tasks( test_tasks );
-    test_function->periodic = true;
-
-    GPEvaluateHeuristic<Task_p *> *train_function = new GPEvaluateHeuristic<Task_p *>( train_tasks );
-    train_function->set_test_tasks( train_tasks );
-    train_function->periodic = true;
-
-    GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, test_function, train_function, 1, population_size, 0 );
-
-    ga->get_solution( population, result );
-
+//    TreeConstructor *tc = new TreeConstructor();
+//
+//    TreeSolution<AbstractNode *> solution;
+//
+//    std::vector<Task_p *>test_tasks;
+//    std::vector<Task_p *>train_tasks;
+//
+//    TreeSolution<AbstractNode *>result;
+//
+//    TaskCreator *task_creator = new TaskCreator();
+//    task_creator->periodic = true;
+//    task_creator->set_task_number( 10 );
+//    task_creator->create_periodic_test_set( test_tasks );
+//    task_creator->create_periodic_test_set( train_tasks );
+//
+//    task_creator->write_tasks_p( test_tasks );
+//
+//    int population_size = 10;
+//    std::vector<TreeSolution<AbstractNode *>> population( population_size );
+//    for( int i=0; i<population_size; i++ ) {
+//        tc->construct_tree_grow( 4, population[i].data );
+//    }
+//
+//    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+//    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+//    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+//
+//    GPEvaluateHeuristic<Task_p *> *test_function = new GPEvaluateHeuristic<Task_p *>( test_tasks );
+//    test_function->set_test_tasks( test_tasks );
+//    test_function->periodic = true;
+//
+//    GPEvaluateHeuristic<Task_p *> *train_function = new GPEvaluateHeuristic<Task_p *>( train_tasks );
+//    train_function->set_test_tasks( train_tasks );
+//    train_function->periodic = true;
+//
+//    GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+//            mutation, selection, test_function, train_function, 50, population_size, 0 );
+//
+//    ga->get_solution( population, result );
 
 //    test_generations( 50 );
 //        test_populations();
@@ -150,15 +150,13 @@ void test_generations( int max_generations )
 
     TreeSolution<AbstractNode *>result;
 
-    std::vector<Task *>test_tasks;
-    std::vector<Task *>train_tasks;
+    std::vector<Task_p *>test_tasks;
+    std::vector<Task_p *>train_tasks;
 
-    TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
-    task_creator->create_test_set( test_tasks );
-
-    task_creator->create_test_set( train_tasks );
-    task_creator->write_tasks( train_tasks );
-    task_creator->load_tasks( train_tasks );
+    TaskCreator *task_creator = new TaskCreator( 10, 0.6, 0.6 );
+    task_creator->create_periodic_test_set( test_tasks );
+    task_creator->create_periodic_test_set( train_tasks );
+//    task_creator->load_tasks( train_tasks );
 
     int population_size = 10;
     std::vector<TreeSolution<AbstractNode *>> population( population_size );
@@ -170,24 +168,27 @@ void test_generations( int max_generations )
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluateHeuristic<Task *> *test_function = new GPEvaluateHeuristic<Task *>( test_tasks );
+    GPEvaluateHeuristic<Task_p *> *test_function = new GPEvaluateHeuristic<Task_p *>( test_tasks );
+    test_function->periodic = true;
+    test_function->set_test_tasks(test_tasks);
 
-    GPEvaluateHeuristic<Task *> *train_function = new GPEvaluateHeuristic<Task *>( train_tasks );
+    GPEvaluateHeuristic<Task_p *> *train_function = new GPEvaluateHeuristic<Task_p *>( train_tasks );
+    train_function->periodic = true;
+    train_function->set_test_tasks(train_tasks);
+    task_creator->write_tasks_p( train_tasks );
 
     GeneticAlgorithm<TreeSolution<AbstractNode *>> *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
             mutation, selection, test_function, train_function, max_generations, population_size, 0 );
 
-
     std::vector<double> train_solutions;
 
-
-
-    for( int i=0; i<50; i++ ) {
+    for( int i=0; i<1; i++ ) {
         for( int i=0; i<population_size; i++ ) {
             tc->construct_tree_grow( 5, population[i].data );
         }
         ga->get_solution( population, result );
-        train_solutions.push_back( result.fitness );
+        ga->get_train_solutions( train_solutions );
+//        train_solutions.push_back( result.fitness );
     }
 
 //    ga->get_solution( population, result );

@@ -11,12 +11,13 @@
 
 class Scheduler {
 public:
-    Scheduler() {}
+    Scheduler( AbstractNode *heuristic ) : heuristic( heuristic ) {}
     virtual void schedule_next( std::vector<Task_p *> &pending, std::vector<Task_p *> &ready, Task_p *&running, double time );
 private:
     virtual void set_start( Task_p *&task, double time );
     virtual void set_end( Task_p *&task, double time );
     virtual bool preempt( const Task_p *t1, const Task_p *t2 );
+    AbstractNode *heuristic;
 };
 
 

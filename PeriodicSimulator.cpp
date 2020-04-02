@@ -9,7 +9,7 @@
 void PeriodicSimulator::initialize()
 {
     TaskCreator *tc = new TaskCreator();
-    tc->set_task_number( 10 );
+    tc->set_task_number( 3 );
     tc->create_periodic_test_set( test_tasks );
     for( auto & element : test_tasks ) {
         element->arrival_time = element->phase;
@@ -21,7 +21,7 @@ void PeriodicSimulator::initialize()
 void PeriodicSimulator::run()
 {
     pending = test_tasks;
-    Scheduler *sched = new Scheduler();
+    Scheduler *sched = new Scheduler( heuristic );
     Task_p *running = nullptr;				// TODO: ovo je leak
     while( abs_time < finish_time ) {
         std::vector<Task_p *>::iterator it = pending.begin();
@@ -53,10 +53,12 @@ void PeriodicSimulator::run()
         while( it != ready.end() ) {
             // next arrival time is less than current time -> missed task, new instance appeared
             if( islessequal( (*it)->phase + ( (*it)->instance - 1 ) * (*it)->period, abs_time + time_slice ) ) {
-                printf("Missed task %d\n", (*it)->id );
+//                printf("Missed task %d\n", (*it)->id );
                 pending.push_back( *it );
+                total_tardiness += (*it)->period;
                 it = ready.erase( it );
                 // update_params( (*it), abs_time + time_slice );
+
                 missed++;
             }
             else {
@@ -107,4 +109,16 @@ void PeriodicSimulator::update_params( Task_p *&task, double time )
 void PeriodicSimulator::set_test_tasks( std::vector<Task_p *> tasks )
 {
     this->test_tasks = tasks;
+}
+
+void PeriodicSimulator::reset_params()
+{
+    abs_time = 0;
+    for( auto & element : test_tasks ) {
+        element->instance = 1;
+        element->isPreempted = false;
+        element->arrival_time = element->phase;
+        element->set_abs_dd();
+        element->tardiness = 0;
+    }
 }

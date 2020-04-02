@@ -17,7 +17,12 @@ struct {
 void Scheduler::schedule_next( std::vector<Task_p *> &pending, std::vector<Task_p *> &ready, Task_p *&running, double time )
 {
 
-//    std::sort( ready.begin(), ready.end(), customLess );
+    for( auto & element : ready ) {
+        element->priority = heuristic->calculate_priority( reinterpret_cast<Task *&>(element),
+                                                           reinterpret_cast<const std::vector<Task *> &>(ready),
+                                                           reinterpret_cast<const std::vector<Task *> &>(pending) );
+    }
+    std::sort( ready.begin(), ready.end(), customLess );
 
     if( running ) {
         if ( preempt( ready[0], running ) ) {

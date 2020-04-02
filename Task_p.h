@@ -24,7 +24,7 @@ class Task_p : public Task  {
         void inc_instance();
         bool isFinished( double time );
         void update_tardiness( double time );
-        void reset_params();
+        void update_params();
         void set_arrival_time();
         void set_remaining( double time );
 
@@ -46,8 +46,6 @@ class Task_p : public Task  {
 private:
     double abs_due_date;
     double remaining;
-
-    void update_params();
 };
 
 

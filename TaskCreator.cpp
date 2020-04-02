@@ -41,7 +41,7 @@ void TaskCreator::create_periodic_test_set( std::vector<Task_p *> &test_tasks )
     std::uniform_real_distribution<> dist_dd(0.5, 1);
 
     std::vector<double> u_values = UUnifast_generate_u( test_tasks.size(), 1 );
-    std::vector<double> T_values = generate_log_uniform( test_tasks.size(), 10000, 1, 1 );
+    std::vector<double> T_values = generate_log_uniform( test_tasks.size(), 100, 10, 10 );
 
     for( int i=0; i<test_tasks.size(); i++ ) {
         test_tasks[i] = std::move( new Task_p );
@@ -117,7 +117,8 @@ std::vector<double> TaskCreator::UUnifast_generate_u( int n, double mean_u )
     double sum_u = mean_u;
 
     for( int i=0; i<n-1; i++ ) {
-        double next_sum_u = sum_u * pow( dist( e2 ), static_cast<double>( 1. / ( n-i ) ) );
+        double coeff = (1 + rand() % 100) / 100.;
+        double next_sum_u = sum_u * pow( coeff, static_cast<double>( 1. / ( n-i ) ) );
         result[i] = sum_u - next_sum_u;
         assert( result[i]!=0 );
         sum_u = next_sum_u;

@@ -14,7 +14,7 @@
 class PeriodicSimulator {
 public:
     PeriodicSimulator( double time_slice, double finish_time, AbstractNode *heuristic ) :
-        time_slice( time_slice ), finish_time( finish_time )
+        time_slice( time_slice ), finish_time( finish_time ), heuristic( heuristic )
     {
         abs_time = 0;
         missed = 0;
@@ -26,8 +26,10 @@ public:
     int missed;
     double total_tardiness;
     void set_test_tasks( std::vector<Task_p *> tasks );
+    void reset_params();
 
 private:
+    AbstractNode *heuristic;
     std::vector<Task_p *> pending;
     std::vector<Task_p *> ready;
     double time_slice;
