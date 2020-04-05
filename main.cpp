@@ -6,12 +6,12 @@
 #include "TreeMutation.h"
 #include "TreeSelection.h"
 #include "TreeCrossover.h"
-#include "TreeMutation.cpp"
-#include "TreeCrossover.cpp"
-#include "TreeSelection.cpp"
-#include "TreeSolution.cpp"
-#include "GeneticAlgorithm.cpp"
-#include "GPEvaluateHeuristic.cpp"
+#include "TreeMutation.tpp"
+#include "TreeCrossover.tpp"
+#include "TreeSelection.tpp"
+#include "TreeSolution.tpp"
+#include "GeneticAlgorithm.tpp"
+#include "GPEvaluateHeuristic.tpp"
 #include "Heuristics/EvaluateHeuristic.h"
 #include "Heuristics/RMHeuristic.h"
 #include "Heuristics/MONHeuristic.h"
@@ -146,12 +146,13 @@ int main( void )
 
 void test_generations( int max_generations )
 {
+    /*
     TreeConstructor *tc = new TreeConstructor();
 
     TreeSolution<AbstractNode *>result;
 
-    std::vector<Task_p *>test_tasks;
-    std::vector<Task_p *>train_tasks;
+    std::vector<Task *>test_tasks;
+    std::vector<Task *>train_tasks;
 
     TaskCreator *task_creator = new TaskCreator( 10, 0.6, 0.6 );
     task_creator->create_periodic_test_set( test_tasks );
@@ -182,12 +183,15 @@ void test_generations( int max_generations )
 
     std::vector<double> train_solutions;
 
+    TreeSolution<AbstractNode *>result1;
+
     for( int i=0; i<1; i++ ) {
         for( int i=0; i<population_size; i++ ) {
             tc->construct_tree_grow( 5, population[i].data );
         }
         ga->get_solution( population, result );
         ga->get_train_solutions( train_solutions );
+//        ga->get_test_solutions()
 //        train_solutions.push_back( result.fitness );
     }
 
@@ -197,6 +201,7 @@ void test_generations( int max_generations )
 //    std::vector<double> test_solutions;
 
     generate_csv( train_solutions );
+    tc->draw_tree( result.data, "moje.dot" );
 
 //    ga->get_train_solutions( train_solutions );
 //    ga->get_test_solutions( test_solutions );
@@ -205,10 +210,12 @@ void test_generations( int max_generations )
 //    plt::named_plot( "test set", test_solutions );
 //    plt::legend();
 //    plt::show();
+     */
 }
 
 void test_populations()
 {
+    /*
     vector<int> population_size{ 10, 20, 50, 100 };
 //    vector<int> population_size{ 10, 20 };
 
@@ -248,25 +255,25 @@ void test_populations()
                 mutation, selection, test_function, train_function, generation_number, size, 0 );
 
         ga->get_solution( population, result );
-/*
-        train_results.push_back( train_function->get_value( result ) );
-        test_results.push_back( test_function->get_value( result ) );
-*/
+
         delete ga;
-    }
+        */
+
 
 //    plt::plot( population_size, train_results );
-
+/*
         std::vector<double> x( population_size.begin(), population_size.end() );
 
         plt::named_plot( "train set", x, train_results );
         plt::named_plot( "test set", x, test_results );
         plt::legend();
     plt::show();
+    */
 }
 
 void test_tree_depth()
 {
+    /*
     vector<int> tree_depth{ 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20 };
 //    vector<int> tree_depth{ 3, 5, 8 };
 
@@ -280,7 +287,7 @@ void test_tree_depth()
     std::vector<double> test_results;
     std::vector<double> train_results;
 
-    TaskCreator *task_creator = new TaskCreator( 12, 0.6, 0.6 );
+    TaskCreator *task_creator = new TaskCreator( 0.6, 0.6 );
     task_creator->create_test_set( test_tasks );
     task_creator->create_test_set( train_tasks );
 
@@ -324,10 +331,12 @@ void test_tree_depth()
     plt::named_plot( "test set", x, test_results );
     plt::legend();
     plt::show();
+     */
 }
 
 void test_set_size()
 {
+    /*
     vector<int> set_size{ 12, 25, 50, 100 };
 //    vector<int> tree_depth{ 3, 5, 8 };
 
@@ -382,6 +391,7 @@ void test_set_size()
     plt::named_plot( "test set", x, test_results );
     plt::legend();
     plt::show();
+     */
 }
 
 void generate_csv( std::vector<double> results )

@@ -1,45 +1,49 @@
-cmake_minimum_required(VERSION 3.15)
-project(GP_scheduling)
+cmake_minimum_required(VERSION 3.10)
+project(GP_scheduling LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-g")
+set(CMAKE_CXX_FLAGS "-g -Wall -Wextra")
 
-include_directories(/usr/include/python2.7/)
-find_package(Python2 COMPONENTS Development NumPy)
-link_libraries(Python2::Python Python2::NumPy)
+find_package(PythonInterp)
+find_package(PythonLibs)
+message(STATUS "PYTHON_LIBRARIES = ${PYTHON_LIBRARIES}")
+include_directories(${PYTHON_INCLUDE_DIRS})
+
+include_directories(include)
+include_directories(include/Heuristics)
+include_directories(include/Nodes)
+include_directories(include/Nodes/TreeOperators)
+include_directories(periodic_tasks_simulator/include)
 
 add_executable(GP_scheduling main.cpp
-        CrossoverOperator.cpp CrossoverOperator.h
-        GeneticAlgorithm.h GeneticAlgorithm.cpp
-        MutationOperator.h MutationOperator.cpp
-        SelectionOperator.h SelectionOperator.cpp
-        Solution.h Solution.cpp
-        TreeMutation.h TreeMutation.cpp
-        TreeSelection.h TreeSelection.cpp
-        TreeCrossover.h TreeCrossover.cpp
-        TreeSolution.h TreeSolution.cpp
-        TreeConstructor.h TreeConstructor.cpp
-        Nodes/AbstractNode.h Nodes/AbstractNode.cpp
-        ../function.h ../function.cpp
-        GPEvaluateHeuristic.h GPEvaluateHeuristic.cpp
-        TaskCreator.h TaskCreator.cpp
-        Task.h Task.cpp
-        Nodes/AddNode.cpp Nodes/AddNode.h
-        Nodes/ddNode.cpp Nodes/ddNode.h
-        Nodes/DivNode.cpp Nodes/DivNode.h
-        Nodes/MulNode.cpp Nodes/MulNode.h
-        Nodes/NrNode.cpp Nodes/NrNode.h
-        Nodes/PosNode.cpp Nodes/PosNode.h
-        Nodes/ptNode.cpp Nodes/ptNode.h
-        Nodes/SDNode.h Nodes/SDNode.cpp
-        Nodes/SPrNode.cpp
-        Nodes/SubNode.cpp
-        Nodes/WNode.cpp
-        Heuristics/SchedulingHeuristic.h Heuristics/SchedulingHeuristic.cpp
-        Heuristics/RMHeuristic.h Heuristics/RMHeuristic.cpp
-        Heuristics/EvaluateHeuristic.cpp Heuristics/EvaluateHeuristic.h
-        Heuristics/MONHeuristic.cpp Heuristics/MONHeuristic.h
-        Heuristics/WSPTHeuristic.cpp Heuristics/WSPTHeuristic.h
-        Heuristics/EDDHeuristic.cpp Heuristics/EDDHeuristic.h
-        Heuristics/HODGHeuristic.cpp Heuristics/HODGHeuristic.h
-        matplotlibcpp.h Task_p.cpp Task_p.h PeriodicSimulator.cpp PeriodicSimulator.h Scheduler.cpp Scheduler.h)
+		src/Heuristics/EDDHeuristic.cpp       
+		src/Heuristics/HODGHeuristic.cpp  
+		src/Heuristics/RMHeuristic.cpp          
+		src/Heuristics/WSPTHeuristic.cpp
+		src/Heuristics/EvaluateHeuristic.cpp
+		src/Heuristics/MONHeuristic.cpp   
+		src/Heuristics/SchedulingHeuristic.cpp
+		src/Nodes/AbstractNode.cpp  
+		src/Nodes/DivNode.cpp  
+		src/Nodes/PosNode.cpp  
+		src/Nodes/SLNode.cpp   
+		src/Nodes/TreeConstructor.cpp  
+		src/Nodes/WNode.cpp
+		src/Nodes/AddNode.cpp       
+		src/Nodes/MulNode.cpp  
+		src/Nodes/ptNode.cpp   
+		src/Nodes/SPrNode.cpp  
+		src/Nodes/ddNode.cpp        
+		src/Nodes/NrNode.cpp   
+		src/Nodes/SDNode.cpp   
+		src/Nodes/SubNode.cpp  
+		src/Nodes/TreeOperators/CrossoverOperator.cpp  
+		src/Nodes/TreeOperators/SelectionOperator.cpp  
+		src/Nodes/TreeOperators/MutationOperator.cpp   
+		src/function.cpp
+		src/optimization_function.cpp)
+
+
+add_subdirectory( periodic_tasks_simulator )
+target_link_libraries( GP_scheduling periodic_simulator )
+target_link_libraries(GP_scheduling ${PYTHON_LIBRARIES})
