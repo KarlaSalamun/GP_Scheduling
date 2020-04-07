@@ -39,32 +39,19 @@ class GeneticAlgorithm  {
 //            delete selection;
         }
 
-        Function<T> *test_function = nullptr;
-        Function<T> *train_function = nullptr;
+
         void get_solution ( std::vector<T> &population, T& result );
         void get_train_solutions( std::vector<double> &solutions );
         void get_test_solutions( std::vector<double> &solutions );
-        void set_crossover ( CrossoverOperator<T> *crossover )
-        {
-            delete this->crossover;
-            this->crossover = crossover;
-        }
-        void set_mutation ( MutationOperator<T> *mutation )
-        {
-            delete this->mutation;
-            this->mutation = mutation;
-        }
-        void set_selection ( SelectionOperator<T> *selection )
-        {
-            delete this->selection;
-            this->selection = selection;
-        }
+        double evaluate_solution( Function<T> *test, T solution );
     private:
         void evaluate_population ( std::vector<T> &population );
         void add_members( std::vector<T> &population,std::vector<T> &members );
         CrossoverOperator<T> *crossover;
-        MutationOperator<T> *mutation = nullptr;
-        SelectionOperator<T> *selection = nullptr;
+        MutationOperator<T> *mutation;
+        SelectionOperator<T> *selection;
+        Function<T> *test_function;
+        Function<T> *train_function;
         unsigned int generation_number;
         size_t population_size;
         unsigned int dim_size;

@@ -25,6 +25,12 @@ class NrNode : public AbstractNode {
         double calculate_priority( Task *&, std::vector<Task *> pending_tasks, std::vector<Task *> ) {
             return pending_tasks.size();
         }
+
+        void execute( void *ctx )
+        {
+            struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
+            ctx_->task->set_priority( ctx_->pending.size() );
+        }
 };
 
 

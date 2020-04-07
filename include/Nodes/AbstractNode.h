@@ -9,6 +9,7 @@
 #include <array>
 #include <queue>
 #include "Task.h"
+#include "Simulator.h"
 
 class AbstractNode {
     public:
@@ -25,6 +26,8 @@ class AbstractNode {
 
         virtual double calculate_priority ( Task *&task, std::vector<Task *> pending_tasks,
                 std::vector<Task *> processed_tasks ) = 0;
+
+        virtual void execute( void* ) = 0;
 
         AbstractNode *get_child( unsigned int index );
         virtual void copy_node( AbstractNode *&original ) = 0;

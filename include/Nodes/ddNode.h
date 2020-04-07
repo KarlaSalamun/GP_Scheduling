@@ -24,6 +24,12 @@ class ddNode : public AbstractNode {
         double calculate_priority( Task *&task, std::vector<Task *> , std::vector<Task *> ) {
             return task->get_abs_due_date();
         }
+
+        void execute( void *ctx )
+        {
+            struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
+            ctx_->task->set_priority( ctx_->task->get_abs_due_date() );
+        }
 };
 
 #endif //GP_SCHEDULING_DDNODE_H

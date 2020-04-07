@@ -24,6 +24,11 @@ class PosNode : public AbstractNode {
         double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
             return std::max( children[0]->calculate_priority( task, pending_tasks, processed_tasks ), 0. );
         }
+
+        void execute( void *ctx ) {
+            struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
+            ctx_->task->set_priority( std::max( children[0]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending ), 0. ));
+        }
 };
 
 

@@ -29,6 +29,16 @@ class SPrNode : public AbstractNode {
             }
             return sum;
         }
+
+        void execute( void *ctx )
+        {
+            struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
+            double sum = 0;
+            for( auto & element : ctx_->pending ) {
+                sum += element->get_duration();
+            }
+            ctx_->task->set_priority( sum );
+        }
 };
 
 

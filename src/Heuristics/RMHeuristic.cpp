@@ -5,7 +5,7 @@
 
 #include "RMHeuristic.h"
 
-double RMHeuristic::calculate_priority(Task *&task, std::vector<Task *> pending_tasks) {
+double RMHeuristic::calculate_priority(Task *&task, std::vector<Task *> ) {
 
     //return task->weight / task->duration *
      //   std::max( 1 - std::max( task->due_date - task->duration , 0. ) / ( 1 * mean_pt ) , 0. );

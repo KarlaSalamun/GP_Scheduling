@@ -24,7 +24,7 @@ template <typename T>
 template <typename T>
 void GeneticAlgorithm<T>::add_members( std::vector<T> &population, std::vector<T>& members )
 {
-    for( int i=0; i<members.size(); i++ ) {
+    for( size_t i=0; i<members.size(); i++ ) {
         population.push_back(move(members[i]));
     }
 }
@@ -33,7 +33,6 @@ void GeneticAlgorithm<T>::add_members( std::vector<T> &population, std::vector<T
 template <typename T>
 void GeneticAlgorithm<T>::get_solution ( std::vector<T> &population, T& result )
 {
-
     for ( size_t i=0; i<generation_number; i++ ) {
         std::vector<T> best_members(2);
         std::vector<T> parents(2);
@@ -84,4 +83,10 @@ template <typename T>
 void GeneticAlgorithm<T>::get_test_solutions(std::vector<double> &solutions)
 {
     solutions = test_solutions;
+}
+
+template <typename T>
+double GeneticAlgorithm<T>::evaluate_solution( Function<T> *test, T solution )
+{
+    return test->get_value( solution );
 }

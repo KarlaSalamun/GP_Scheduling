@@ -4,7 +4,7 @@
 
 #include "EDDHeuristic.h"
 
-double EDDHeuristic::calculate_priority(Task *&task, std::vector<Task *> pending_tasks)
+double EDDHeuristic::calculate_priority(Task *&task, std::vector<Task *> )
 {
     return 1. / task->get_abs_due_date();
 }

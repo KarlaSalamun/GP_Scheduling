@@ -25,6 +25,12 @@ class MulNode : public AbstractNode {
             return children[0]->calculate_priority( task, pending_tasks, processed_tasks ) *
                 children[1]->calculate_priority( task, pending_tasks, processed_tasks );
         }
+
+        void execute( void *ctx ) {
+            struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
+            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending )
+                                      * children[1]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending ) );
+        }
 };
 
 

@@ -5,15 +5,9 @@
 #include <algorithm>
 #include "HODGHeuristic.h"
 
-struct {
-    bool operator()(Task *a, Task *b) const
-    {
-        return a->get_priority() < b->get_priority();
-    }
-} customLess;
-
-double HODGHeuristic::calculate_priority(Task *&task, std::vector<Task *> pending_tasks)
+double HODGHeuristic::calculate_priority(Task *&, std::vector<Task *> )
 {
+    return 0;
     /*
     std::vector<Task *> tmp_list;
     Task *tmp = new Task;

@@ -30,7 +30,7 @@ double EvaluateHeuristic::calculate_twt()
 
     while( pending_tasks.size() > 0 ) {
         heuristic->set_time( time, pending_tasks );
-        for( int i=0; i<pending_tasks.size(); i++ ) {
+        for( size_t i=0; i<pending_tasks.size(); i++ ) {
             pending_tasks[i]->set_priority( heuristic->calculate_priority( pending_tasks[i], pending_tasks ) );
         }
 

@@ -162,8 +162,8 @@ void TreeConstructor::construct_tree_full( int max_depth, AbstractNode *&root )
 
 void TreeConstructor::construct_tree_grow( int max_depth, AbstractNode *&root )
 {
-//    int depth = rand() % max_depth + 1;
-    int depth = 3;
+    int depth = rand() % max_depth + 1;
+//    int depth = 3;
     int identifier = 0;
     get_random_function_node( root );
     root->id = identifier;
@@ -238,7 +238,7 @@ void TreeConstructor::get_depth( AbstractNode *&root )
 
     else {
         root->depth += 1;
-        for( int i=0; i<root->children.size(); i++ ) {
+        for( size_t i=0; i<root->children.size(); i++ ) {
             get_depth( root->children[i] );
         }
     }
@@ -273,35 +273,6 @@ void TreeConstructor::draw_tree( AbstractNode *&root, std::string filename )
     fclose( fp );
 }
 
-void TreeConstructor::destroy_tree(AbstractNode *&root)
-{
-    /*
-    std::queue<AbstractNode *> queue;
-    std::vector<AbstractNode *> delete_nodes;
-    queue.push( root );
-
-    int ref_depth = 1;
-    while( ref_depth < root->depth ) {
-        int size = queue.size();
-        for( int i=0; i<size; i++ ) {
-            AbstractNode *current = queue.front();
-            queue.pop();
-            for( int j=0; j<current->children_number; j++ ) {
-                queue.push( current->children[j] );
-                delete_nodes.push_back( current->children[j] );
-            }
-        }
-        ref_depth++;
-    }
-
-    for( size_t i=0; i<delete_nodes.size(); i++ ) {
-        delete delete_nodes[i];
-    }
-
-    delete root;
-     */
-}
-
 void TreeConstructor::check_tree(AbstractNode *&root, int depth)
 {
     AbstractNode *current;
@@ -311,7 +282,7 @@ void TreeConstructor::check_tree(AbstractNode *&root, int depth)
 
     current = root;
     if( current != nullptr ) {
-        for (int i = 0; i < current->children.size(); i++) {
+        for (size_t i = 0; i < current->children.size(); i++) {
             if (current->children[i] != nullptr) {
                 check_tree(current->children[i], depth - 1);
             }
