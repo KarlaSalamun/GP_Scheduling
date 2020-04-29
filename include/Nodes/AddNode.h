@@ -29,8 +29,8 @@ class AddNode : public AbstractNode {
 
         void execute( void *ctx ) {
             struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
-            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending )
-                                      + children[1]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending ) );
+            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed )
+                                      + children[1]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed ) );
         }
 };
 

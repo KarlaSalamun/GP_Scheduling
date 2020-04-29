@@ -11,6 +11,7 @@
 #include "TreeSolution.h"
 #include "Nodes/AbstractNode.h"
 #include "../function.h"
+#include "UunifastCreator.h"
 
 class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
@@ -21,7 +22,7 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
             test_tasks = tasks;
         }
         bool periodic;
-    private:
+    protected:
         int task_number;
         std::vector<Task *> test_tasks;
         std::vector<Task *> pending_tasks;

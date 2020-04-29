@@ -41,7 +41,10 @@ add_executable(GP_scheduling main.cpp
 		src/Nodes/TreeOperators/SelectionOperator.cpp  
 		src/Nodes/TreeOperators/MutationOperator.cpp   
 		src/function.cpp
-		src/optimization_function.cpp)
+		src/optimization_function.cpp
+		include/TreePopulation.tpp
+		include/NSGA.tpp
+		src/GPEvaluate_NSGA.cpp)
 
 
 add_subdirectory( periodic_tasks_simulator )

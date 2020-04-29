@@ -12,6 +12,7 @@ class SelectionOperator {
     public:
         virtual ~SelectionOperator() {}
         virtual void get_members( std::vector<T> &population, std::vector<T> &members ) = 0;
+        virtual void grouping_tournament( std::vector<T> &population, std::vector<T> &members ) = 0;
 };
 
 

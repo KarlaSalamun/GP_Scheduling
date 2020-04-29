@@ -16,6 +16,11 @@ class Solution {
     public:
         T data;
         double fitness;
+        std::pair<double, double> fitness_NSGA;
+        int mi;
+        std::vector<int> S;
+        double d;
+        int rank;
 };
 
 #endif //PROJEKT_SOLUTION_H

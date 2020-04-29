@@ -38,7 +38,17 @@ class SDNode : public AbstractNode {
         void execute( void *ctx )
         {
             struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
-            ctx_->task->set_priority( ctx_->task->get_abs_due_date() );
+
+            double sum = 0;
+
+            for( auto & element : ctx_->pending ) {
+                sum+=element->get_abs_due_date();
+            }
+
+            for( auto & element : ctx_->processed ) {
+                sum+=element->get_abs_due_date();
+            }
+            ctx_->task->set_priority( sum );
         }
 };
 

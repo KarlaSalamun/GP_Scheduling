@@ -13,6 +13,7 @@ class TreeSolution : public Solution<T> {
 public:
     T data = nullptr;
     double fitness;
+    std::pair<double, double> fitness_NSGA;
 
     TreeSolution( TreeSolution&& sol) : data(sol.data), fitness(sol.fitness)
     {
@@ -34,6 +35,10 @@ public:
     {
         this->copy_data( data, obj.data );
         this->fitness = obj.fitness;
+        this->rank = obj.rank;
+        this->S = obj.S;
+        this->mi = obj.mi;
+        this->d = obj.d;
     }
 
     TreeSolution<T>&operator = ( const TreeSolution<T>& obj )

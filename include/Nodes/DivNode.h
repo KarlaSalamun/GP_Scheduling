@@ -31,8 +31,8 @@ class DivNode : public AbstractNode {
         void execute( void *ctx ) override
         {
             struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
-            double tmp_result = children[1]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending );
-            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->ready, ctx_->pending )
+            double tmp_result = children[1]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed );
+            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed )
                                       / ( std::isgreater( fabs(tmp_result), 0 ) ? tmp_result : 1 ) );
         }
 };

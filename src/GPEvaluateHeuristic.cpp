@@ -17,14 +17,17 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
     double abs_time = 0;
 
     Scheduler *sched = new Scheduler();
-    UunifastCreator *tc = new UunifastCreator( task_number, "./uunifast_tasks.txt", 10, 1, 1 );
-    tc->create_test_set( test_tasks );
-    tc->write_tasks( test_tasks );
+    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/task_set.txt", false, 10, 1, 1, 1 );
+//    tc->create_test_set( test_tasks );
+//    tc->write_tasks( test_tasks );
+    tc->load_tasks( test_tasks );
+    tc->compute_hyperperiod( test_tasks );
 
     if( periodic ) {
-        Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 0.1, 10, tc, sched, true );
+        Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true );
         simulator->set_heuristic( solution.data );
         simulator->load();
+        simulator->set_finish_time( tc->get_hyperperiod() );
         simulator->run();
         return simulator->get_total_tardiness();
     }

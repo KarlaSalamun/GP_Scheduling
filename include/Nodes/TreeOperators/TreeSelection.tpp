@@ -25,3 +25,23 @@ void TreeSelection<T>::get_members( std::vector<T> &population, std::vector<T> &
     members[1] = move(rand_members[1]);
 }
 
+template <typename T>
+void TreeSelection<T>::grouping_tournament( std::vector<T> &population, std::vector<T> &members )
+{
+    members.clear();
+
+    for( size_t i=0; i<population.size(); i++ ) {
+        for( size_t j=0; j< population.size(); j++ ) {
+            if( j == i ) {
+                continue;
+            }
+            if( population[i].rank > population[j].rank ) {
+                members.push_back( population[i] );
+                continue;
+            }
+            if( population[i].rank == population[j].rank && population[i].d > population[j].d ) {
+                members.push_back( population[i] );
+            }
+        }
+    }
+}
