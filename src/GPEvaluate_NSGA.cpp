@@ -7,7 +7,7 @@
 std::pair<double, double> GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution )
 {
     Scheduler *sched = new Scheduler();
-    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/task_set.txt", false, 10, 1, 1, 1 );
+    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/160.txt", false, 10, 1, 1, 1 );
     //    tc->create_test_set( test_tasks );
     //    tc->write_tasks( test_tasks );
     tc->load_tasks( test_tasks );

@@ -54,6 +54,43 @@ int main( void )
     auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
             mutation, selection, nsga, nsga1, tp, 100, population_size, 0 );
     ga->get_solution( population, result );
+
+    std::vector<Task *> pending;
+
+    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/160.txt", true, 100, 10, 10, 1 );
+    taskc->set_time_slice( 0.01 );
+    taskc->load_tasks( pending );
+
+    std::vector<double> durations;
+    for( auto & element : pending ) {
+        durations.push_back( element->get_duration() );
+        assert( element->get_duration() != 0 );
+    }
+
+    Scheduler *sched = new Scheduler();
+    taskc->compute_hyperperiod( pending );
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true );
+    sim->set_heuristic( result.data );
+
+    for( int overload = 90; overload <= 160; overload = overload + 5 ) {
+        std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
+        taskc->set_filename( tmp );
+        taskc->load_tasks( pending );
+//        overload_values.push_back( overload );
+        double util = 0;
+//        taskc->set_overload( overload );
+//        taskc->compute_overloaded( pending, durations );
+        for( auto & element : pending ) {
+            element->initialize_task();
+            util += element->get_duration() / element->get_period();
+        }
+        printf( "%f\n", util );
+        sim->set_finish_time( taskc->get_hyperperiod() );
+        sim->set_pending( pending );
+        sim->run();
+        printf( "overload: %d\ttard:%f\tmissed:%d\n", overload, sim->get_total_tardiness(), sim->get_missed() );
+    }
+
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
     test_function->periodic = true;

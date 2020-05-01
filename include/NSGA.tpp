@@ -55,6 +55,7 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         }
 
         population = new_parents;
+        assert( population.size() <= 2 * this->population_size );
         offspring = new_offspring;
 
         printf( "generation: %zu\ttardiness: %f\tmissed: %f\n", gen, population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
@@ -62,6 +63,7 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
     evaluate_population(population );
     result = move( population[0] );
     result.fitness_NSGA = population[0].fitness_NSGA;
+    printf( "%f\t%f\n", population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
 }
 
 template <typename T>
