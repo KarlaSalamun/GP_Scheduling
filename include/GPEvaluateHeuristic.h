@@ -12,12 +12,14 @@
 #include "Nodes/AbstractNode.h"
 #include "../function.h"
 #include "UunifastCreator.h"
+#include "Simulator.h"
 
 class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
         explicit GPEvaluateHeuristic( int task_number ) : task_number( task_number ) {}
         GPEvaluateHeuristic() {}
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
+        void get_value_NSGA( TreeSolution<AbstractNode *>&, std::pair<double, double>& ) override {};
         void set_test_tasks( std::vector<Task *> tasks ) {
             test_tasks = tasks;
         }

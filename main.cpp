@@ -50,11 +50,14 @@ int main( void )
     GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 4 );
     GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 4 );
 
+//    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
+//    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
 
     auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, nsga, nsga1, tp, 100, population_size, 0 );
+            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
     ga->get_solution( population, result );
 
+    /*
     std::vector<Task *> pending;
 
     UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/160.txt", true, 100, 10, 10, 1 );
@@ -90,6 +93,7 @@ int main( void )
         sim->run();
         printf( "overload: %d\ttard:%f\tmissed:%d\n", overload, sim->get_total_tardiness(), sim->get_missed() );
     }
+     */
 
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );

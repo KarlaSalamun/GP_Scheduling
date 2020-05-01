@@ -3,8 +3,9 @@
 //
 
 #include "GPEvaluate_NSGA.h"
+#include "Simulator.tpp"
 
-std::pair<double, double> GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution )
+void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness )
 {
     Scheduler *sched = new Scheduler();
     UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/160.txt", false, 10, 1, 1, 1 );
@@ -19,6 +20,5 @@ std::pair<double, double> GPEvaluate_NSGA::get_value_NSGA( TreeSolution<Abstract
     simulator->set_finish_time( tc->get_hyperperiod() );
     simulator->run();
 
-    return std::make_pair( simulator->get_total_tardiness(), simulator->get_missed() );
+    fitness = std::make_pair( simulator->compute_deviation(), -simulator->compute_skip_fitness() );
 }
-

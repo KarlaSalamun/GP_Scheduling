@@ -19,7 +19,7 @@ void TreeSelection<T>::get_members( std::vector<T> &population, std::vector<T> &
         rand_members.push_back( population[i] );
     }
 
-    qsort(rand_members.data(), rand_members.size(), sizeof(T), compare_members<Solution<AbstractNode *>>);
+    qsort(rand_members.data(), rand_members.size(), sizeof(T), compare_members_descending<Solution<AbstractNode *>>);
 
     members[0] = move(rand_members[0]);
     members[1] = move(rand_members[1]);

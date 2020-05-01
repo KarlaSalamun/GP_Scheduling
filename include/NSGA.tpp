@@ -8,7 +8,7 @@ template <typename T>
 void NSGA<T>::evaluate_population ( std::vector<T> &population )
 {
     for( size_t i = 0; i<population.size(); i++ ) {
-        population[i].fitness_NSGA = this->train_function->get_value_NSGA( population[i] );
+        this->train_function->get_value_NSGA( population[i], population[i].fitness_NSGA );
     }
 }
 
@@ -58,7 +58,7 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         assert( population.size() <= 2 * this->population_size );
         offspring = new_offspring;
 
-        printf( "generation: %zu\ttardiness: %f\tmissed: %f\n", gen, population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
+        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
     }
     evaluate_population(population );
     result = move( population[0] );
@@ -126,6 +126,10 @@ bool NSGA<T>::is_dominant( std::pair<double, double> x, std::pair<double, double
 template <typename T>
 void NSGA<T>::grouping_sort( std::vector<T> &front )
 {
+    if( front.size() == 0 ) {
+        return;
+    }
+
     std::vector<int> I1( front.size() );
     std::vector<int> I2( front.size() );
 
@@ -151,9 +155,9 @@ void NSGA<T>::grouping_sort( std::vector<T> &front )
 
     for( size_t i=1; i<I1.size()-1; i++ ) {
         front[I1[i]].d = static_cast<double>( front[I1[i+1]].fitness_NSGA.first - front[I1[i-1]].fitness_NSGA.first ) /
-                static_cast<double>( front[I1[5]].fitness_NSGA.first - front[I1[0]].fitness_NSGA.first );
+                static_cast<double>( front[I1[I1.size()-1]].fitness_NSGA.first - front[I1[0]].fitness_NSGA.first );
         front[I1[i]].d += static_cast<double>( front[I2[i+1]].fitness_NSGA.second - front[I2[i-1]].fitness_NSGA.second ) /
-                static_cast<double>( front[I2[5]].fitness_NSGA.second - front[I2[0]].fitness_NSGA.second );
+                static_cast<double>( front[I2[I1.size()-1]].fitness_NSGA.second - front[I2[0]].fitness_NSGA.second );
     }
     std::sort( front.begin(), front.end(),
                []( const auto &a, const auto &b )

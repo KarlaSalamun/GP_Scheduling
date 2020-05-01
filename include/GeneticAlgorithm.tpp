@@ -17,7 +17,7 @@ template <typename T>
         population[i].fitness = train_function->get_value( population[i] );
     }
 
-    qsort( population.data(), population.size(), sizeof(T), compare_members<T> );
+    qsort( population.data(), population.size(), sizeof(T), compare_members_descending<T> );
 
 }
 

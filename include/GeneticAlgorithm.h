@@ -15,11 +15,20 @@
 using namespace std;
 
 template <typename T>
-static int compare_members(const void *m1, const void *m2)
+static int compare_members_descending(const void *m1, const void *m2)
 {
     const T* member1 = static_cast<const T *>(m1);
     const T* member2 = static_cast<const T *>(m2);
-    return member1->fitness - member2->fitness;
+    if( member1->fitness < member2->fitness ) {
+        return -1;
+    }
+    else if( member1->fitness == member2->fitness ) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
+//    return member1->fitness - member2->fitness;
 }
 
 template <typename T>

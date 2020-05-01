@@ -11,7 +11,7 @@
 class GPEvaluate_NSGA : public GPEvaluateHeuristic {
 public:
     GPEvaluate_NSGA( int task_number ) : GPEvaluateHeuristic( task_number ) {}
-    std::pair<double, double> get_value_NSGA ( TreeSolution<AbstractNode *> &solution );
+    void get_value_NSGA ( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness );
 };
 
 #endif //GP_SCHEDULING_GPEVALUATE_NSGA_H

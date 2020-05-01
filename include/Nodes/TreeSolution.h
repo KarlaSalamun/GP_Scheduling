@@ -39,6 +39,7 @@ public:
         this->S = obj.S;
         this->mi = obj.mi;
         this->d = obj.d;
+        this->fitness_NSGA = obj.fitness_NSGA;
     }
 
     TreeSolution<T>&operator = ( const TreeSolution<T>& obj )

@@ -12,6 +12,8 @@ void TreeSolution<T>::copy_data( T &dest, const T &src )
     std::queue<AbstractNode *> queue_src;
     std::queue<AbstractNode *> queue_dest;
 
+    assert( src->children[0] );
+
     src->copy_node( dest );
     queue_src.push( src );
     queue_dest.push( dest );
