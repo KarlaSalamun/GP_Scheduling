@@ -5,10 +5,10 @@
 #include "GPEvaluate_NSGA.h"
 #include "Simulator.tpp"
 
-void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness )
+void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness, bool display )
 {
     Scheduler *sched = new Scheduler();
-    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/120.txt", false, 10, 1, 1, 1 );
+    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/140.txt", false, 10, 1, 1, 1 );
     //    tc->create_test_set( test_tasks );
     //    tc->write_tasks( test_tasks );
     tc->load_tasks( test_tasks );
@@ -20,7 +20,12 @@ void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, st
     simulator->set_finish_time( tc->get_hyperperiod() );
     simulator->run();
 
+    if( display ) {
+        simulator->display_info();
+    }
+
     fitness = std::make_pair( simulator->compute_deviation(), -simulator->compute_skip_fitness() );
+
     delete simulator;
     delete sched;
     delete tc;

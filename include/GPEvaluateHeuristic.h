@@ -30,7 +30,7 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
             }
         }
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
-        void get_value_NSGA( TreeSolution<AbstractNode *>&, std::pair<double, double>& ) override {};
+        void get_value_NSGA( TreeSolution<AbstractNode *>&, std::pair<double, double>&, bool ) override {};
         void set_test_tasks( std::vector<Task *> tasks ) {
             test_tasks = tasks;
         }

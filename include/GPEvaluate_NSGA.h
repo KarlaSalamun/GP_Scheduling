@@ -13,7 +13,7 @@ public:
     virtual ~GPEvaluate_NSGA() = default;
 
     GPEvaluate_NSGA( int task_number ) : GPEvaluateHeuristic( task_number ) {}
-    void get_value_NSGA ( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness );
+    void get_value_NSGA ( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness, bool display );
 };
 
 #endif //GP_SCHEDULING_GPEVALUATE_NSGA_H

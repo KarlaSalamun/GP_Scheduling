@@ -26,7 +26,7 @@
 
 namespace plt = matplotlibcpp;
 
-void generate_csv( std::vector<double> results );
+void generate_csv(std::vector<double> results, std::vector<double> utils, std::string filename );
 
 int main( void )
 {
@@ -57,10 +57,10 @@ int main( void )
             mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
     ga->get_solution( population, result );
 
-    /*
+
     std::vector<Task *> pending;
 
-    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/160.txt", true, 100, 10, 10, 1 );
+    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/140.txt", true, 100, 10, 10, 1 );
     taskc->set_time_slice( 0.01 );
     taskc->load_tasks( pending );
 
@@ -74,6 +74,9 @@ int main( void )
     taskc->compute_hyperperiod( pending );
     Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true );
     sim->set_heuristic( result.data );
+
+    std::vector<double> utils;
+    std::vector<double> results;
 
     for( int overload = 90; overload <= 160; overload = overload + 5 ) {
         std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
@@ -91,10 +94,13 @@ int main( void )
         sim->set_finish_time( taskc->get_hyperperiod() );
         sim->set_pending( pending );
         sim->run();
-        printf( "overload: %d\ttard:%f\tmissed:%d\n", overload, sim->get_total_tardiness(), sim->get_missed() );
+        sim->compute_mean_skip_factor();
+        printf( "overload: %d\tqos: %lf\tmean skip factor: %lf\n", overload, sim->get_qos(), sim->get_mean_skip_factor() );
+        utils.push_back( overload / 100. );
+        results.push_back( sim->get_qos() );
     }
-     */
 
+    generate_csv( results, utils, "heur.csv" );
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
     test_function->periodic = true;
@@ -118,7 +124,7 @@ int main( void )
     plt::show();
     generate_csv( train_solutions );
      */
-
+    tc->draw_tree( result.data, "../graphs/skipfactoropt.dot" );
    return 0;
 }
 
@@ -130,11 +136,12 @@ int main( void )
 ////    }
 //}
 
-void generate_csv( std::vector<double> results )
+void generate_csv(std::vector<double> results, std::vector<double> utils, std::string filename )
 {
-    FILE *fd = fopen( "./../../test_outputs/test_results.csv", "w+" );
+    std::string tmp = "./../../test_outputs/";
+    FILE *fd = fopen( (tmp + filename).c_str(), "w+" );
     for( size_t i=0; i<results.size(); i++ ) {
-        fprintf( fd, "%zu,%lf\n", i+1, results[i] );
+        fprintf( fd, "%lf,%lf\n", utils[i], results[i] );
     }
     fclose( fd );
 }

@@ -12,7 +12,7 @@ class Function {
     public:
     virtual ~Function() {}
         virtual double get_value( T &args ) = 0;
-        virtual void get_value_NSGA( T &args, std::pair<double, double> &fitness ) = 0;
+        virtual void get_value_NSGA( T &args, std::pair<double, double> &fitness, bool display ) = 0;
 };
 
 #endif //PROJEKT_FUNCTION_H

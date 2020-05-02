@@ -8,7 +8,7 @@ template <typename T>
 void NSGA<T>::evaluate_population ( std::vector<T> &population )
 {
     for( size_t i = 0; i<population.size(); i++ ) {
-        this->train_function->get_value_NSGA( population[i], population[i].fitness_NSGA );
+        this->train_function->get_value_NSGA( population[i], population[i].fitness_NSGA, false );
     }
 }
 
@@ -75,9 +75,13 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
     }
     evaluate_population(population );
+
+    this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
+
     result = move( population[0] );
     population[0].data = nullptr;
     result.fitness_NSGA = population[0].fitness_NSGA;
+
     printf( "%f\t%f\n", population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
 }
 
