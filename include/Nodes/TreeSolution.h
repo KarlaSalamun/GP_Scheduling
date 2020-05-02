@@ -11,29 +11,30 @@
 template <typename T>
 class TreeSolution : public Solution<T> {
 public:
-    T data = nullptr;
-    double fitness;
-    std::pair<double, double> fitness_NSGA;
 
-    TreeSolution( TreeSolution&& sol) : data(sol.data), fitness(sol.fitness)
+    TreeSolution( TreeSolution&& sol)
     {
+        copy_data( this->data, sol.data );
+        this->fitness = sol.fitness;
         sol.data = nullptr;
     }
+
+    TreeSolution() = default;
 
     TreeSolution& operator = ( TreeSolution&& other )
     {
         if( &other == this ) {
             return *this;
         }
-        delete data;
-        this->data = other.data;
-        other.data = nullptr;
+//        delete this->data;
+        this->data = std::move( other.data );
+//        other.data = nullptr;
         return *this;
     }
 
     TreeSolution( const TreeSolution& obj )
     {
-        this->copy_data( data, obj.data );
+        this->copy_data( this->data, obj.data );
         this->fitness = obj.fitness;
         this->rank = obj.rank;
         this->S = obj.S;
@@ -47,8 +48,8 @@ public:
         if ( &obj == this ) {
             return *this;
         }
-        delete data;
-        this->copy_data( data, obj.data );
+        delete this->data;
+        this->copy_data( this->data, obj.data );
 
         return *this;
     }
@@ -58,15 +59,17 @@ public:
         return test_function->get_value( solution );
     }
 
-    TreeSolution( T data ) : data( data ) {}
-    TreeSolution() {}
+    TreeSolution( T data ) {
+        this->data = data;
+    }
 
     void copy_data( T &dest, const T &src );
 
     ~TreeSolution() {
-        delete data;
+        if( this->data ) {
+            delete this->data;
+        }
     }
-
 };
 
 

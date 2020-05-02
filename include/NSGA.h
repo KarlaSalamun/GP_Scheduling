@@ -8,6 +8,22 @@
 #include "GeneticAlgorithm.h"
 
 template <typename T>
+static int compare_distances(const void *m1, const void *m2)
+{
+    const T* member1 = static_cast<const T *>(m1);
+    const T* member2 = static_cast<const T *>(m2);
+    if( member1->d > member2->d ) {
+        return -1;
+    }
+    else if( member1->d == member2->d ) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
+template <typename T>
 class NSGA : public GeneticAlgorithm<T> {
 public:
     NSGA( CrossoverOperator<T> *crossover, MutationOperator<T> *mutation,

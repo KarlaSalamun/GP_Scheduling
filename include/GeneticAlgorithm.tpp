@@ -26,6 +26,7 @@ void GeneticAlgorithm<T>::add_members( std::vector<T> &population, std::vector<T
 {
     for( size_t i=0; i<members.size(); i++ ) {
         population.push_back(move(members[i]));
+        members[i].data = nullptr;
     }
 }
 

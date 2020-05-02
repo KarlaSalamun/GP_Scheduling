@@ -25,6 +25,13 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
 
         std::vector<std::vector<T>> fronts = nondominant_sort( population );
 
+        size_t sumsize = 0;
+        for( auto & element : fronts ) {
+            sumsize += element.size();
+        }
+
+        assert( sumsize == population.size() );
+
         std::vector<T> new_parents;
         size_t remaining_size = this->population_size;
         size_t i;
@@ -40,30 +47,38 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         std::copy( fronts[i].begin(), fronts[i].begin()+remaining_size, std::back_inserter( new_parents )  );
 
         std::vector<T> parents;
-        std::vector<T> tmp_parents(2);
+        std::vector<T> tmp_parents;
         this->selection->grouping_tournament( new_parents, parents );
         std::vector<T> new_offspring;
-        std::vector<T> children(2);
+        std::vector<T> children;
 
-        for( i=0; i<new_parents.size(); i+=2 ) {
-            tmp_parents[0] = new_parents[i];
-            tmp_parents[1] = new_parents[i+1];
+        assert( new_parents.size() % 2 == 0 );
+
+        for( i=0; i<new_parents.size()-2; i+=2 ) {
+            assert( new_parents[i].data );
+            std::copy( new_parents.begin() + i, new_parents.begin() + i + 2, std::back_inserter( tmp_parents ) );
+            children.resize( 2 );
             this->crossover->get_children( tmp_parents, children );
+            tmp_parents[0].data = nullptr;
+            tmp_parents[1].data = nullptr;
+            tmp_parents.clear();
             this->mutation->mutate_solution( children[0] );
             this->mutation->mutate_solution( children[1] );
             this->add_members( new_offspring, children );
+            children.clear();
         }
 
         population = new_parents;
         assert( population.size() <= 2 * this->population_size );
         offspring = new_offspring;
 
-        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
+        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
     }
     evaluate_population(population );
     result = move( population[0] );
+    population[0].data = nullptr;
     result.fitness_NSGA = population[0].fitness_NSGA;
-    printf( "%f\t%f\n", population[0].fitness_NSGA.first, population[0].fitness_NSGA.second );
+    printf( "%f\t%f\n", population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
 }
 
 template <typename T>
@@ -95,7 +110,6 @@ std::vector<std::vector<T>> NSGA<T>::nondominant_sort( std::vector<T> &populatio
 
     while( !current_front.empty() ) {
         front_cnt++;
-        fronts.push_back( current_front );
         std::vector<T> Q;
         for( size_t i = 0; i<current_front.size(); i++ ) {
             for( size_t j=0; j<current_front[i].S.size(); j++ ) {
@@ -106,7 +120,8 @@ std::vector<std::vector<T>> NSGA<T>::nondominant_sort( std::vector<T> &populatio
                 }
             }
         }
-        current_front = Q;
+        fronts.push_back( std::move( current_front ) );
+        std::copy( Q.begin(), Q.end(), std::back_inserter( current_front ) );
     }
 
     return fronts;
@@ -159,7 +174,6 @@ void NSGA<T>::grouping_sort( std::vector<T> &front )
         front[I1[i]].d += static_cast<double>( front[I2[i+1]].fitness_NSGA.second - front[I2[i-1]].fitness_NSGA.second ) /
                 static_cast<double>( front[I2[I1.size()-1]].fitness_NSGA.second - front[I2[0]].fitness_NSGA.second );
     }
-    std::sort( front.begin(), front.end(),
-               []( const auto &a, const auto &b )
-                       -> bool { return a.d > b.d; });
+
+    qsort( front.data(), front.size(), sizeof(T), compare_distances<T> );
 }

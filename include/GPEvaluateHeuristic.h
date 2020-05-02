@@ -18,6 +18,17 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
     public:
         explicit GPEvaluateHeuristic( int task_number ) : task_number( task_number ) {}
         GPEvaluateHeuristic() {}
+        virtual ~GPEvaluateHeuristic() {
+            for( auto & element : test_tasks ) {
+                delete element;
+            }
+            for( auto & element : pending_tasks ) {
+                delete element;
+            }
+            for( auto & element : processed_tasks ) {
+                delete element;
+            }
+        }
         double get_value( TreeSolution<AbstractNode *> &solution ) override;
         void get_value_NSGA( TreeSolution<AbstractNode *>&, std::pair<double, double>& ) override {};
         void set_test_tasks( std::vector<Task *> tasks ) {

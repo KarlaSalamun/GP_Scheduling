@@ -10,6 +10,8 @@
 
 class GPEvaluate_NSGA : public GPEvaluateHeuristic {
 public:
+    virtual ~GPEvaluate_NSGA() = default;
+
     GPEvaluate_NSGA( int task_number ) : GPEvaluateHeuristic( task_number ) {}
     void get_value_NSGA ( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness );
 };
