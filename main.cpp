@@ -47,8 +47,8 @@ int main( void )
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 4 );
-    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 4 );
+    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
+    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
 
 //    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
 //    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
@@ -60,24 +60,30 @@ int main( void )
 
     std::vector<Task *> pending;
 
-    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/140.txt", true, 100, 10, 10, 1 );
-    taskc->set_time_slice( 0.01 );
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/comparison.txt", true, 100, 10, 10, 1 );
+    taskc->set_time_slice( 1 );
     taskc->load_tasks( pending );
 
     std::vector<double> durations;
     for( auto & element : pending ) {
         durations.push_back( element->get_duration() );
+        element->initialize_task();
         assert( element->get_duration() != 0 );
     }
 
     Scheduler *sched = new Scheduler();
     taskc->compute_hyperperiod( pending );
-    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true );
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
     sim->set_heuristic( result.data );
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->set_display();
+    sim->set_filename( "./../../test_outputs/comparison.tex" );
+    sim->set_pending( pending );
+    sim->run();
 
     std::vector<double> utils;
     std::vector<double> results;
-
+/*
     for( int overload = 90; overload <= 160; overload = overload + 5 ) {
         std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
         taskc->set_filename( tmp );
@@ -99,8 +105,8 @@ int main( void )
         utils.push_back( overload / 100. );
         results.push_back( sim->get_qos() );
     }
-
-    generate_csv( results, utils, "heur.csv" );
+*/
+//    generate_csv( results, utils, "heur.csv" );
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
     test_function->periodic = true;

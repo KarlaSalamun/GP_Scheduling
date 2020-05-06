@@ -24,7 +24,7 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
     tc->compute_hyperperiod( test_tasks );
 
     if( periodic ) {
-        Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true );
+        Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true, false );
         simulator->set_heuristic( solution.data );
         simulator->load();
         simulator->set_finish_time( tc->get_hyperperiod() );
