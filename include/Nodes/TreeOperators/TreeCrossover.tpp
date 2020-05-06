@@ -8,63 +8,43 @@
 #include "TreeConstructor.h"
 
 template <typename T>
-void TreeCrossover<T>::get_children( std::vector<T> &parents, std::vector<T> &children ) {
+void TreeCrossover<T>::get_children( std::vector<T> &parents, std::vector<T> & )
+{
+    swap_nodes( parents[0].data.first, parents[1].data.first );
+    swap_nodes( parents[0].data.second, parents[1].data.second );
+}
 
+template <typename T>
+void TreeCrossover<T>::swap_nodes( AbstractNode *&root1, AbstractNode *&root2 )
+{
     TreeConstructor *tc = new TreeConstructor();
 
-    int rand_depth = rand() % parents[0].data->depth;
-    AbstractNode *random_tree1 = parents[0].data->pick_random(parents[0].data, rand_depth);
+    int rand_depth = rand() % root1->depth;
+    AbstractNode *random_tree1 = root1->pick_random(root1, rand_depth);
     tc->get_depth( random_tree1 );
 
-    rand_depth = rand() % parents[1].data->depth;
-    AbstractNode *random_tree2 = parents[1].data->pick_random(parents[1].data, rand_depth);
+    rand_depth = rand() % root2->depth;
+    AbstractNode *random_tree2 = root2->pick_random( root2, rand_depth );
     tc->get_depth( random_tree2 );
 
     if ( random_tree1->children_number == 0 || random_tree2->children_number == 0 ) {
-
-        children[0] = move(parents[0]);
-        children[1] = move(parents[1]);
-
-        if (children[1].data == nullptr) {
-            std::cout << "NULL1" << std::endl;
-        }
         delete tc;
         return;
     }
 
-
-    if( parents[0].data->depth - random_tree1->depth + random_tree2->depth > max_depth ) {
-
-        children[0] = move( parents[0] );
-
-        if (parents[1].data->depth - random_tree2->depth + random_tree1->depth > max_depth ) {
-            children[1]= move( parents[1] );
-        } else {
-            children[1] = move( parents[0] );
-        }
-        if (children[1].data == nullptr) {
-            std::cout << "NULL2" << std::endl;
-        }
-        delete tc;
+    if( root1->depth - random_tree1->depth + random_tree2->depth > max_depth ||
+        root2->depth - random_tree2->depth + random_tree1->depth > max_depth ) {
+        delete  tc;
         return;
     }
 
     else {
-
         int random_index1 = rand() % random_tree1->children_number;
         int random_index2 = rand() % random_tree2->children_number;
         std::swap(random_tree2->children[random_index2], random_tree1->children[random_index1]);
 
-        tc->rehash_tree(parents[0].data);
-        tc->rehash_tree(parents[1].data);
-
-        children[0] = move( parents[0] );
-        children[1] = move( parents[1] );
+        tc->rehash_tree(root1);
+        tc->rehash_tree(root2);
     }
-    if (children[1].data == nullptr) {
-        std::cout << "NULL3" << std::endl;
-    }
-
     delete tc;
 }
-

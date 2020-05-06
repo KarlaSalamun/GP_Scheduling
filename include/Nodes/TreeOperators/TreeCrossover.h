@@ -18,6 +18,7 @@ class TreeCrossover : public CrossoverOperator<T> {
         }
     private:
         int max_depth = 5;
+        void swap_nodes( AbstractNode *&root1, AbstractNode *&root2 );
 };
 
 #endif //SANTAFE_TREECROSSOVER_H

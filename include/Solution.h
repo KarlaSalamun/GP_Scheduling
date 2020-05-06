@@ -14,7 +14,7 @@ using namespace std;
 template <typename  T>
 class Solution {
     public:
-        T data;
+        std::pair<T, T> data;
         double fitness;
         std::pair<double, double> fitness_NSGA;
         int mi;

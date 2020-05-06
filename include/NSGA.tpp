@@ -55,17 +55,14 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         assert( new_parents.size() % 2 == 0 );
 
         for( i=0; i<new_parents.size()-2; i+=2 ) {
-            assert( new_parents[i].data );
+            assert( new_parents[i].data.first );
             std::copy( new_parents.begin() + i, new_parents.begin() + i + 2, std::back_inserter( tmp_parents ) );
             children.resize( 2 );
-            this->crossover->get_children( tmp_parents, children );
-            tmp_parents[0].data = nullptr;
-            tmp_parents[1].data = nullptr;
+            this->crossover->get_children( tmp_parents, tmp_parents );
+            this->mutation->mutate_solution( tmp_parents[0] );
+            this->mutation->mutate_solution( tmp_parents[1] );
+            this->add_members( new_offspring, tmp_parents );
             tmp_parents.clear();
-            this->mutation->mutate_solution( children[0] );
-            this->mutation->mutate_solution( children[1] );
-            this->add_members( new_offspring, children );
-            children.clear();
         }
 
         population = new_parents;
@@ -79,7 +76,9 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
     this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
 
     result = move( population[0] );
-    population[0].data = nullptr;
+    population[0].data.first = nullptr;
+    population[0].data.second = nullptr;
+
     result.fitness_NSGA = population[0].fitness_NSGA;
 
     printf( "%f\t%f\n", population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );

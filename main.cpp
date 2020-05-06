@@ -36,7 +36,7 @@ int main( void )
 
     TreeConstructor *tc = new TreeConstructor();
 
-    int population_size = 20;
+    int population_size = 50;
     TreePopulation<TreeSolution<AbstractNode *>> *tp =
             new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
     // TODO stavi ovo u funkciju
@@ -130,7 +130,7 @@ int main( void )
     plt::show();
     generate_csv( train_solutions );
      */
-    tc->draw_tree( result.data, "../graphs/skipfactoropt.dot" );
+    tc->draw_tree( result.data.first, "../graphs/skipfactoropt.dot" );
    return 0;
 }
 

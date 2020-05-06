@@ -36,7 +36,7 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
     else {
         while( pending_tasks.size() > 0 ) {
             for (size_t i = 0; i < pending_tasks.size(); i++) {
-                pending_tasks[i]->set_priority( solution.data->calculate_priority(
+                pending_tasks[i]->set_priority( solution.data.first->calculate_priority(
                         reinterpret_cast<Task *&>(pending_tasks[i]),
                         reinterpret_cast<const std::vector<Task *> &>(pending_tasks),
                         reinterpret_cast<const std::vector<Task *> &>(processed_tasks)) );

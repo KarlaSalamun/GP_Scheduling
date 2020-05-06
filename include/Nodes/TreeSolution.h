@@ -14,9 +14,11 @@ public:
 
     TreeSolution( TreeSolution&& sol)
     {
-        copy_data( this->data, sol.data );
+        copy_data( this->data.first, sol.data.first );
+        copy_data( this->data.second, sol.data.second );
         this->fitness = sol.fitness;
-        sol.data = nullptr;
+        sol.data.first = nullptr;
+        sol.data.second = nullptr;
     }
 
     TreeSolution() = default;
@@ -27,14 +29,17 @@ public:
             return *this;
         }
 //        delete this->data;
-        this->data = std::move( other.data );
+        this->data.first = std::move( other.data.first );
+        this->data.second = std::move( other.data.second );
 //        other.data = nullptr;
         return *this;
     }
 
     TreeSolution( const TreeSolution& obj )
     {
-        this->copy_data( this->data, obj.data );
+        this->copy_data( this->data.first, obj.data.first );
+        this->copy_data( this->data.second, obj.data.second );
+
         this->fitness = obj.fitness;
         this->rank = obj.rank;
         this->S = obj.S;
@@ -48,8 +53,10 @@ public:
         if ( &obj == this ) {
             return *this;
         }
-        delete this->data;
-        this->copy_data( this->data, obj.data );
+        delete this->data.first;
+        delete this->data.second;
+        this->copy_data( this->data.first, obj.data.first );
+        this->copy_data( this->data.second, obj.data.second );
 
         return *this;
     }
@@ -60,14 +67,17 @@ public:
     }
 
     TreeSolution( T data ) {
-        this->data = data;
+        this->data.first = data.first;
+        this->data.second = data.second;
+
     }
 
     void copy_data( T &dest, const T &src );
 
     ~TreeSolution() {
-        if( this->data ) {
-            delete this->data;
+        if( this->data.first && this->data.second ) {
+            delete this->data.first;
+            delete this->data.second;
         }
     }
 };

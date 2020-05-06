@@ -19,6 +19,7 @@ public:
     }
 private:
     int max_depth = 3;
+    void mutate_tree( AbstractNode *&root );
 };
 
 
