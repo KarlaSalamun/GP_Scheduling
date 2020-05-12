@@ -15,7 +15,7 @@ void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, st
     tc->compute_hyperperiod( test_tasks );
 
     Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true, false );
-    simulator->set_heuristic( solution.data );
+    simulator->set_heuristic( solution.evaluation_pair );
     simulator->load();
     simulator->set_finish_time( tc->get_hyperperiod() );
     simulator->run();

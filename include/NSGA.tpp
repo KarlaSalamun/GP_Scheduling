@@ -5,84 +5,138 @@
 #include "NSGA.h"
 
 template <typename T>
-void NSGA<T>::evaluate_population ( std::vector<T> &population )
+void NSGA<T>::evaluate_population ( std::vector<std::vector<T>> &population )
 {
-    for( size_t i = 0; i<population.size(); i++ ) {
-        this->train_function->get_value_NSGA( population[i], population[i].fitness_NSGA, false );
+    std::pair<double, double> best_fitness{ 1000, 1000 };
+
+    for( size_t i=0; i<population[0].size(); i++ ) {
+//        for( size_t j=0; j<10; j++ ) {
+//            population[0][i].evaluation_pair = std::make_pair( population[0][i].data, population[1][j].data );
+//            this->train_function->get_value_NSGA( population[0][i], population[0][i].fitness_NSGA, false );
+//            if( population[0][i].fitness_NSGA.first < best_fitness.first && population[0][i].fitness_NSGA.second < best_fitness.second ) {
+//                best_fitness.first = population[0][i].fitness_NSGA.first;
+//                best_fitness.second = population[0][i].fitness_NSGA.second;
+//            }
+//        }
+//        population[0][i].fitness_NSGA.first = best_fitness.first;
+//        population[0][i].fitness_NSGA.second = best_fitness.second;
+
+        population[0][i].evaluation_pair = std::make_pair( population[0][i].data, population[1][i].data );
+        this->train_function->get_value_NSGA( population[0][i], population[0][i].fitness_NSGA, false );
+    }
+
+    for( size_t i=0; i<population[1].size(); i++ ) {
+//        for( size_t j=0; j<10; j++ ) {
+//            population[1][i].evaluation_pair = std::make_pair( population[0][i].data, population[1][j].data );
+//            this->train_function->get_value_NSGA( population[1][i], population[1][i].fitness_NSGA, false );
+//            if( population[1][i].fitness_NSGA.first < best_fitness.first && population[1][i].fitness_NSGA.second < best_fitness.second ) {
+//                best_fitness.first = population[1][i].fitness_NSGA.first;
+//                best_fitness.second = population[1][i].fitness_NSGA.second;
+//            }
+//        }
+//        population[1][i].fitness_NSGA.first = best_fitness.first;
+//        population[1][i].fitness_NSGA.second = best_fitness.second;
+        population[1][i].evaluation_pair = std::make_pair( population[0][i].data, population[1][i].data );
+        this->train_function->get_value_NSGA( population[1][i], population[1][i].fitness_NSGA, false );
     }
 }
 
 template <typename T>
-void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
+void NSGA<T>::get_solution ( std::vector<std::vector<T>> &population, std::vector<T>& result )
 {
-    std::vector<T> offspring;
-    this->population->create_new_population( offspring );
+    std::vector<std::vector<T>> offspring(this->dim_size);
+
+    for( size_t i = 0; i<this->dim_size; i++ ) {
+        this->population->create_new_population( offspring[i] );
+    }
+
+    std::copy( offspring[0].begin(), offspring[0].end(), std::back_inserter( population[0] ) );
+    std::copy( offspring[1].begin(), offspring[1].end(), std::back_inserter( population[1] ) );
+
+    for( size_t i=0; i<population[0].size(); i++ ) {
+        population[0][i].evaluation_pair = std::make_pair( population[0][i].data, population[1][i].data );
+        this->train_function->get_value_NSGA( population[0][i], population[0][i].fitness_NSGA, false );
+    }
+
+    for( size_t i=0; i<population[1].size(); i++ ) {
+        population[1][i].evaluation_pair = std::make_pair( population[1][i].data, population[0][i].data );
+        this->train_function->get_value_NSGA( population[1][i], population[1][i].fitness_NSGA, false );
+    }
 
     for ( size_t gen=0; gen<this->generation_number; gen++ ) {
-        std::copy( offspring.begin(), offspring.end(), std::back_inserter( population ) );
+
+        for( size_t species=0; species<this->dim_size; species++ ) {
+
+            std::vector<std::vector<T>> fronts = nondominant_sort( population[species] );
+
+            size_t sumsize = 0;
+            for( auto & element : fronts ) {
+                sumsize += element.size();
+            }
+
+            assert( sumsize == population[species].size() );
+
+            std::vector<T> new_parents;
+            size_t remaining_size = this->population_size;
+            size_t i;
+            for( i=0; i<fronts.size(); i++ ) {
+                if( fronts[i].size() > remaining_size ) {
+                    break;
+                }
+                remaining_size -= fronts[i].size();
+                std::copy( fronts[i].begin(), fronts[i].end(), std::back_inserter( new_parents ) );
+            }
+
+            grouping_sort( fronts[i] );
+            std::copy( fronts[i].begin(), fronts[i].begin()+remaining_size, std::back_inserter( new_parents )  );
+
+            std::vector<T> parents;
+            std::vector<T> tmp_parents;
+            this->selection->grouping_tournament( new_parents, parents );
+            std::vector<T> new_offspring;
+            std::vector<T> children;
+
+            assert( new_parents.size() % 2 == 0 );
+
+            for( i=0; i<new_parents.size()-1; i+=2 ) {
+                assert( new_parents[i].data );
+                std::copy( new_parents.begin() + i, new_parents.begin() + i + 2, std::back_inserter( tmp_parents ) );
+                children.resize( 2 );
+                this->crossover->get_children( tmp_parents, children );
+                tmp_parents[0].data = nullptr;
+                tmp_parents[1].data = nullptr;
+                tmp_parents.clear();
+                this->mutation->mutate_solution( children[0] );
+                this->mutation->mutate_solution( children[1] );
+                this->add_members( new_offspring, children );
+                children.clear();
+            }
+
+            population[i] = new_parents;
+            assert( population[i].size() <= 2 * this->population_size );
+            offspring[i] = new_offspring;
+
+            std::copy( offspring[i].begin(), offspring[i].end(), std::back_inserter( population[i] ) );
+        }
 
         evaluate_population( population );
 
-        std::vector<std::vector<T>> fronts = nondominant_sort( population );
-
-        size_t sumsize = 0;
-        for( auto & element : fronts ) {
-            sumsize += element.size();
-        }
-
-        assert( sumsize == population.size() );
-
-        std::vector<T> new_parents;
-        size_t remaining_size = this->population_size;
-        size_t i;
-        for( i=0; i<fronts.size(); i++ ) {
-            if( fronts[i].size() > remaining_size ) {
-                break;
-            }
-            remaining_size -= fronts[i].size();
-            std::copy( fronts[i].begin(), fronts[i].end(), std::back_inserter( new_parents ) );
-        }
-
-        grouping_sort( fronts[i] );
-        std::copy( fronts[i].begin(), fronts[i].begin()+remaining_size, std::back_inserter( new_parents )  );
-
-        std::vector<T> parents;
-        std::vector<T> tmp_parents;
-        this->selection->grouping_tournament( new_parents, parents );
-        std::vector<T> new_offspring;
-        std::vector<T> children;
-
-        assert( new_parents.size() % 2 == 0 );
-
-        for( i=0; i<new_parents.size()-2; i+=2 ) {
-            assert( new_parents[i].data );
-            std::copy( new_parents.begin() + i, new_parents.begin() + i + 2, std::back_inserter( tmp_parents ) );
-            children.resize( 2 );
-            this->crossover->get_children( tmp_parents, children );
-            tmp_parents[0].data = nullptr;
-            tmp_parents[1].data = nullptr;
-            tmp_parents.clear();
-            this->mutation->mutate_solution( children[0] );
-            this->mutation->mutate_solution( children[1] );
-            this->add_members( new_offspring, children );
-            children.clear();
-        }
-
-        population = new_parents;
-        assert( population.size() <= 2 * this->population_size );
-        offspring = new_offspring;
-
-        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
+        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0][0].fitness_NSGA.first, -population[0][0].fitness_NSGA.second );
     }
     evaluate_population(population );
 
-    this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
+    this->train_function->get_value_NSGA( population[0][0], population[0][0].fitness_NSGA, true );
 
-    result = move( population[0] );
-    population[0].data = nullptr;
-    result.fitness_NSGA = population[0].fitness_NSGA;
+    result.push_back( std::move( population[0][0] ) );
+    result.push_back( std::move( population[1][0] ) );
 
-    printf( "%f\t%f\n", population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
+    population[0][0].data = nullptr;
+    population[0][1].data = nullptr;
+
+    result[0].fitness_NSGA = population[0][0].fitness_NSGA;
+    result[1].fitness_NSGA = population[1][0].fitness_NSGA;
+
+    printf( "%f\t%f\n", population[0][0].fitness_NSGA.first, -population[0][0].fitness_NSGA.second );
 }
 
 template <typename T>

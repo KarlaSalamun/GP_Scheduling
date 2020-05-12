@@ -32,10 +32,10 @@ public:
            GeneticAlgorithm<T>( crossover, mutation, selection, test_function, train_function, population,
                              generation_number, population_size, dim_size ) {}
 
-    void get_solution ( std::vector<T> &population, T& result );
+    void get_solution ( std::vector<std::vector<T>> &population, std::vector<T>& result );
 
 private:
-    void evaluate_population ( std::vector<T> &population );
+    void evaluate_population ( std::vector<std::vector<T>> &population );
     std::vector<std::vector<T>> nondominant_sort( std::vector<T> &population );
     bool is_dominant( std::pair<double, double> x, std::pair<double, double> y );
     void grouping_sort( std::vector<T> &front );

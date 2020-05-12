@@ -21,6 +21,7 @@ class Solution {
         std::vector<int> S;
         double d;
         int rank;
+        std::pair<T, T> evaluation_pair;
 };
 
 #endif //PROJEKT_SOLUTION_H

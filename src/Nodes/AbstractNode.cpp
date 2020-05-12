@@ -10,13 +10,15 @@
 AbstractNode::AbstractNode()
 {}
 
-AbstractNode::~AbstractNode()
-{
-    for( size_t i=0; i<children.size(); i++ ) {
-        delete children[i];
-        children[i] = nullptr;
-    }
-}
+//AbstractNode::~AbstractNode()
+//{
+//    for( size_t i=0; i<children.size(); i++ ) {
+//        delete children[i];
+//        children[i] = nullptr;
+//    }
+//}
+
+AbstractNode::~AbstractNode() = default;
 
 AbstractNode *AbstractNode::get_child( unsigned int index )
 {

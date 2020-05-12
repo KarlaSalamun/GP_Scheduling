@@ -30,7 +30,7 @@ void generate_csv(std::vector<double> results, std::vector<double> utils, std::s
 
 int main( void )
 {
-    TreeSolution<AbstractNode *>result;
+    std::vector<TreeSolution<AbstractNode *>>result;
 //    srand(static_cast<double> (0));
     srand(static_cast<double> (time(NULL)) );
 
@@ -40,8 +40,10 @@ int main( void )
     TreePopulation<TreeSolution<AbstractNode *>> *tp =
             new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
     // TODO stavi ovo u funkciju
-    std::vector<TreeSolution<AbstractNode *>> population;
-    tp->create_new_population( population );
+    std::vector<std::vector<TreeSolution<AbstractNode *>>> population(2);
+    for( size_t i=0; i<population.size(); i++ ) {
+        tp->create_new_population( population[i] );
+    }
 
     TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
@@ -54,7 +56,7 @@ int main( void )
 //    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
 
     auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
+            mutation, selection, nsga, nsga1, tp, 50, population_size, 2 );
     ga->get_solution( population, result );
 
 
@@ -74,7 +76,7 @@ int main( void )
     Scheduler *sched = new Scheduler();
     taskc->compute_hyperperiod( pending );
     Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
-    sim->set_heuristic( result.data );
+    sim->set_heuristic( std::make_pair( result[0].data, result[1].data ) );
     sim->set_finish_time( taskc->get_hyperperiod() );
     sim->set_display();
     sim->set_filename( "./../../test_outputs/comparison.tex" );
@@ -130,7 +132,7 @@ int main( void )
     plt::show();
     generate_csv( train_solutions );
      */
-    tc->draw_tree( result.data, "../graphs/skipfactoropt.dot" );
+    tc->draw_tree( result[0].data, "../graphs/skipfactoropt.dot" );
    return 0;
 }
 
