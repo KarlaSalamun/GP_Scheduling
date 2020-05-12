@@ -69,7 +69,7 @@ int main( void )
 
     Scheduler *sched = new Scheduler();
     taskc->compute_hyperperiod( pending );
-    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true );
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
     sim->set_heuristic( result.data );
 
     for( int overload = 90; overload <= 160; overload = overload + 5 ) {

@@ -13,7 +13,7 @@ std::pair<double, double> GPEvaluate_NSGA::get_value_NSGA( TreeSolution<Abstract
     tc->load_tasks( test_tasks );
     tc->compute_hyperperiod( test_tasks );
 
-    Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true );
+    Simulator<AbstractNode *> *simulator = new Simulator<AbstractNode *>( 1, 10, tc, sched, true, false );
     simulator->set_heuristic( solution.data );
     simulator->load();
     simulator->set_finish_time( tc->get_hyperperiod() );
