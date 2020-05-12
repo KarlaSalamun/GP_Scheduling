@@ -47,8 +47,8 @@ int main( void )
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
-    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
+    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 4 );
+    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 4 );
 
 //    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
 //    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
@@ -60,7 +60,7 @@ int main( void )
 
     std::vector<Task *> pending;
 
-    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/comparison.txt", true, 100, 10, 10, 1 );
+    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/120.txt", true, 100, 10, 10, 1 );
     taskc->set_time_slice( 1 );
     taskc->load_tasks( pending );
 
@@ -83,7 +83,7 @@ int main( void )
 
     std::vector<double> utils;
     std::vector<double> results;
-/*
+
     for( int overload = 90; overload <= 160; overload = overload + 5 ) {
         std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
         taskc->set_filename( tmp );
@@ -101,12 +101,12 @@ int main( void )
         sim->set_pending( pending );
         sim->run();
         sim->compute_mean_skip_factor();
-        printf( "overload: %d\tqos: %lf\tmean skip factor: %lf\n", overload, sim->get_qos(), sim->get_mean_skip_factor() );
+        printf( "overload: %d\twasted time: %lf\tmean skip factor: %lf\n", overload, sim->get_time_wasted(), sim->get_mean_skip_factor() );
         utils.push_back( overload / 100. );
         results.push_back( sim->get_qos() );
     }
-*/
-//    generate_csv( results, utils, "heur.csv" );
+
+    generate_csv( results, utils, "coevolution.csv" );
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
     test_function->periodic = true;
