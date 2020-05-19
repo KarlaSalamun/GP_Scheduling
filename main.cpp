@@ -103,10 +103,10 @@ int main( void )
         sim->compute_mean_skip_factor();
         printf( "overload: %d\twasted time: %lf\tmean skip factor: %lf\n", overload, sim->get_time_wasted(), sim->get_mean_skip_factor() );
         utils.push_back( overload / 100. );
-        results.push_back( sim->get_qos() );
+        results.push_back( sim->get_time_wasted() );
     }
 
-    generate_csv( results, utils, "coevolution.csv" );
+    generate_csv( results, utils, "coevolution_wt.csv" );
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
     test_function->periodic = true;
