@@ -118,10 +118,11 @@ void TreeConstructor::get_random_any( AbstractNode *&new_node )
     }
 }
 
-void TreeConstructor::construct_tree_full( int max_depth, AbstractNode *&root )
+void TreeConstructor::construct_tree_full( int, AbstractNode *&root )
 {
     get_random_function_node( root );
-    int depth = rand() % max_depth + 1;
+//    int depth = rand() % max_depth + 1;
+    int depth = 3;
     int identifier = 0;
     root->id = identifier;
     identifier++;
@@ -160,10 +161,10 @@ void TreeConstructor::construct_tree_full( int max_depth, AbstractNode *&root )
     root->depth = depth;
 }
 
-void TreeConstructor::construct_tree_grow( int max_depth, AbstractNode *&root )
+void TreeConstructor::construct_tree_grow( int, AbstractNode *&root )
 {
-    int depth = rand() % max_depth + 1;
-//    int depth = 3;
+//    int depth = rand() % max_depth + 1;
+    int depth = 3;
     int identifier = 0;
     get_random_function_node( root );
     root->id = identifier;

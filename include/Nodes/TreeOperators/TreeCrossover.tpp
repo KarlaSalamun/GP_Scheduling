@@ -32,7 +32,6 @@ void TreeCrossover<T>::get_children( std::vector<T> &parents, std::vector<T> &ch
         return;
     }
 
-
     if( parents[0].data->depth - random_tree1->depth + random_tree2->depth > max_depth ) {
 
         children[0] = parents[0];

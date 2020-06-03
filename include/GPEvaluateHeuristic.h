@@ -22,7 +22,11 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
             test_tasks = tasks;
         }
         bool periodic;
-    protected:
+        std::pair<double, double> get_value_NSGA( TreeSolution<AbstractNode *> & ) override {
+            return std::make_pair( 0, 0 );
+        }
+
+protected:
         int task_number;
         std::vector<Task *> test_tasks;
         std::vector<Task *> pending_tasks;

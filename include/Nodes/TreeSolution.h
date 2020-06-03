@@ -20,7 +20,7 @@ public:
         sol.data = nullptr;
     }
 
-    TreeSolution& operator = ( TreeSolution&& other )
+    TreeSolution& operator = ( TreeSolution&& other ) noexcept
     {
         if( &other == this ) {
             return *this;
