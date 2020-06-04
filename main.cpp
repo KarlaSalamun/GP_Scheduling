@@ -36,39 +36,38 @@ int main( void )
 
     TreeConstructor *tc = new TreeConstructor();
 
-    int population_size = 20;
-    TreePopulation<TreeSolution<AbstractNode *>> *tp =
-            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
-    // TODO stavi ovo u funkciju
-    std::vector<TreeSolution<AbstractNode *>> population;
-    tp->create_new_population( population );
-
-    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
-    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
-    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
-
-    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 4 );
-    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 4 );
-
-//    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
-//    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
-
-    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
-    ga->get_solution( population, result );
-
-
+//    int population_size = 20;
+//    TreePopulation<TreeSolution<AbstractNode *>> *tp =
+//            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
+//    // TODO stavi ovo u funkciju
+//    std::vector<TreeSolution<AbstractNode *>> population;
+//    tp->create_new_population( population );
+//
+//    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+//    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+//    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+//
+//    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
+//    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
+//
+////    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
+////    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
+//
+//    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
+//            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
+//    ga->get_solution( population, result );
+//
+//
     std::vector<Task *> pending;
 
-    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/120.txt", true, 100, 10, 10, 1 );
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
     taskc->set_time_slice( 1 );
     taskc->load_tasks( pending );
 
-    std::vector<double> durations;
+    tc->custom_tree( result.data );
+
     for( auto & element : pending ) {
-        durations.push_back( element->get_duration() );
         element->initialize_task();
-        assert( element->get_duration() != 0 );
     }
 
     Scheduler *sched = new Scheduler();
@@ -80,6 +79,31 @@ int main( void )
     sim->set_filename( "./../../test_outputs/comparison.tex" );
     sim->set_pending( pending );
     sim->run();
+    sim->compute_mean_skip_factor();
+    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
+
+    taskc->set_task_number(2);
+    taskc->set_filename("./../../test_inputs/test_3.txt");
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_pending( pending );
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->run();
+    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
+
+    taskc->set_task_number(3);
+    taskc->set_filename("./../../test_inputs/test_2.txt");
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_pending( pending );
+    taskc->compute_hyperperiod( pending );
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->run();
+    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
 
     std::vector<double> utils;
     std::vector<double> results;

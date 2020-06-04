@@ -32,6 +32,7 @@ class TreeConstructor {
         void draw_tree( AbstractNode *&root, std::string filename );
         void check_tree(AbstractNode *&root, int depth);
         void get_depth( AbstractNode *&root );
+        void custom_tree( AbstractNode *&root );
 };
 
 
