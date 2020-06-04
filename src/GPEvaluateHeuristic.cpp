@@ -17,7 +17,7 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
     double abs_time = 0;
 
     Scheduler *sched = new Scheduler();
-    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/160.txt", false, 10, 1, 1, 1 );
+    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/test_1.txt", false, 10, 1, 1, 1 );
 //    tc->create_test_set( test_tasks );
 //    tc->write_tasks( test_tasks );
     tc->load_tasks( test_tasks );

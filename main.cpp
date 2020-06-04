@@ -47,8 +47,8 @@ int main( void )
     TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
     TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 4 );
-    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 4 );
+    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
+    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
 
 //    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
 //    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
@@ -60,7 +60,7 @@ int main( void )
 
     std::vector<Task *> pending;
 
-    UunifastCreator *taskc = new UunifastCreator( 4, "./../../test_inputs/120.txt", true, 100, 10, 10, 1 );
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
     taskc->set_time_slice( 1 );
     taskc->load_tasks( pending );
 
@@ -78,6 +78,36 @@ int main( void )
     sim->set_finish_time( taskc->get_hyperperiod() );
     sim->set_display();
     sim->set_filename( "./../../test_outputs/comparison.tex" );
+    sim->set_pending( pending );
+    sim->run();
+
+    taskc->set_filename("./../../test_inputs/test_1.txt");
+    taskc->set_task_number(3);
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->set_pending( pending );
+    sim->run();
+
+    taskc->set_filename("./../../test_inputs/test_2.txt");
+    taskc->set_task_number(2);
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->set_pending( pending );
+    sim->run();
+
+    taskc->set_filename("./../../test_inputs/test_3.txt");
+    taskc->set_task_number(3);
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_finish_time( taskc->get_hyperperiod() );
     sim->set_pending( pending );
     sim->run();
 
