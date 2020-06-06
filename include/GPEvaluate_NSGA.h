@@ -14,6 +14,7 @@ public:
 
     GPEvaluate_NSGA( int task_number ) : GPEvaluateHeuristic( task_number ) {}
     void get_value_NSGA ( TreeSolution<AbstractNode *> &solution, std::pair<double, double> &fitness, bool display );
+    double compute_mean_fitness( std::vector<double> values );
 };
 
 #endif //GP_SCHEDULING_GPEVALUATE_NSGA_H

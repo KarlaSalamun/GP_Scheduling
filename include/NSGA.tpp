@@ -35,7 +35,7 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         std::vector<T> new_parents;
         size_t remaining_size = this->population_size;
         size_t i;
-        for( i=0; i<fronts.size(); i++ ) {
+        for( i=0; i<fronts.size()-1; i++ ) {
             if( fronts[i].size() > remaining_size ) {
                 break;
             }
