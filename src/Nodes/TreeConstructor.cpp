@@ -293,7 +293,11 @@ void TreeConstructor::check_tree(AbstractNode *&root, int depth)
 void TreeConstructor::custom_tree( AbstractNode *&root )
 {
     root = new MulNode;
-    root->children[0] = new NrNode;
-    root->children[1] = new ptNode;
+    root->children[0] = new ptNode;
+    root->children[1] = new DivNode;
+    root->children[1]->children[0] = new SDNode;
+    root->children[1]->children[1] = new DivNode;
+    root->children[1]->children[1]->children[0] = new SDNode;
+    root->children[1]->children[1]->children[1] = new ptNode;
 }
 

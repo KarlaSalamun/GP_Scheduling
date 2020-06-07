@@ -36,45 +36,44 @@ int main( void )
     srand(static_cast<double> (time(NULL)) );
 
     TreeConstructor *tc = new TreeConstructor();
-
-    int population_size = 2;
-    TreePopulation<TreeSolution<AbstractNode *>> *tp =
-            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
-    // TODO stavi ovo u funkciju
-    std::vector<TreeSolution<AbstractNode *>> population;
-    tp->create_new_population( population );
-
-    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
-    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
-    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
-
-    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
-    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
-
-//    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
-//    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
-
-    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
-    ga->get_solution( population, result );
-
-    test_utils_qos( result.data );
-
-//    std::vector<Task *> pending;
+////
+//    int population_size = 10;
+//    TreePopulation<TreeSolution<AbstractNode *>> *tp =
+//            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
+//    std::vector<TreeSolution<AbstractNode *>> population;
+//    tp->create_new_population( population );
 //
-//    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
-//    taskc->set_time_slice( 1 );
-//    taskc->load_tasks( pending );
+//    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+//    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+//    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 //
-////    tc->custom_tree( result.data );
+//    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
+//    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
 //
-//    for( auto & element : pending ) {
-//        element->initialize_task();
-//    }
+////    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
+////    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
 //
-//    Scheduler *sched = new Scheduler();
-//    taskc->compute_hyperperiod( pending );
-//    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
+//    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
+//            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
+//    ga->get_solution( population, result );
+
+//    test_utils_qos( result.data );
+
+    std::vector<Task *> pending;
+
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
+    taskc->set_time_slice( 1 );
+    taskc->load_tasks( pending );
+
+    tc->custom_tree( result.data );
+
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+
+    Scheduler *sched = new Scheduler();
+    taskc->compute_hyperperiod( pending );
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
 //    sim->set_heuristic( result.data );
 //    sim->set_finish_time( taskc->get_hyperperiod() );
 //    sim->set_display();
@@ -82,10 +81,11 @@ int main( void )
 //    sim->set_pending( pending );
 //    sim->run();
 //    sim->compute_mean_skip_factor();
-//    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
-//
+//    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
+
 //    taskc->set_task_number(2);
 //    taskc->set_filename("./../../test_inputs/test_3.txt");
+//    pending.clear();
 //    taskc->load_tasks( pending );
 //    for( auto & element : pending ) {
 //        element->initialize_task();
@@ -93,19 +93,35 @@ int main( void )
 //    sim->set_pending( pending );
 //    sim->set_finish_time( taskc->get_hyperperiod() );
 //    sim->run();
-//    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
-//
-//    taskc->set_task_number(3);
-//    taskc->set_filename("./../../test_inputs/test_2.txt");
-//    taskc->load_tasks( pending );
-//    for( auto & element : pending ) {
-//        element->initialize_task();
-//    }
-//    sim->set_pending( pending );
-//    taskc->compute_hyperperiod( pending );
-//    sim->set_finish_time( taskc->get_hyperperiod() );
-//    sim->run();
-//    printf( "gini: %lf, skip: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor() );
+//    sim->compute_mean_skip_factor();
+//    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
+
+    taskc->set_task_number(4);
+    taskc->set_filename("./../../test_inputs/comparison.txt");
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_pending( pending );
+    taskc->compute_hyperperiod( pending );
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->set_heuristic( result.data );
+    sim->run();
+    sim->compute_mean_skip_factor();
+    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
+
+    taskc->set_task_number(3);
+    taskc->set_filename("./../../test_inputs/test_2.txt");
+    taskc->load_tasks( pending );
+    for( auto & element : pending ) {
+        element->initialize_task();
+    }
+    sim->set_pending( pending );
+    taskc->compute_hyperperiod( pending );
+    sim->set_finish_time( taskc->get_hyperperiod() );
+    sim->run();
+    sim->compute_mean_skip_factor();
+    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
 //
 //    std::vector<double> utils;
 //    std::vector<double> results;
@@ -156,7 +172,7 @@ int main( void )
     plt::show();
     generate_csv( train_solutions );
      */
-    tc->draw_tree( result.data, "../graphs/skipfactoropt.dot" );
+//    tc->draw_tree( result.data, "../graphs/skipfactoropt.dot" );
    return 0;
 }
 

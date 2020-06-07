@@ -8,7 +8,7 @@ void TreePopulation<T>::create_new_population( std::vector<T> &population )
 {
     for( int i=0; i<this->size; i++ ) {
         T solution;
-        tc->construct_tree_grow( 3, solution.data );
+        tc->construct_tree_grow( 7, solution.data );
         population.push_back( solution );
     }
 }
