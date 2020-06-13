@@ -18,12 +18,15 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
     std::vector<T> offspring;
     this->population->create_new_population( offspring );
 
+    std::vector<std::vector<T>> fronts;
+
     for ( size_t gen=0; gen<this->generation_number; gen++ ) {
         std::copy( offspring.begin(), offspring.end(), std::back_inserter( population ) );
 
         evaluate_population( population );
 
-        std::vector<std::vector<T>> fronts = nondominant_sort( population );
+        fronts.clear();
+        fronts = nondominant_sort( population );
 
         size_t sumsize = 0;
         for( auto & element : fronts ) {
@@ -78,11 +81,29 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
 
     this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
 
+    std::string filename = "./../../test_outputs/front.csv";
+    FILE *fd = fopen( filename.c_str(), "w+" );
+    for( size_t i=0; i<fronts[0].size(); i++ ) {
+        fprintf( fd, "%lf,%lf\n", fronts[0][i].fitness_NSGA.first, -fronts[0][i].fitness_NSGA.second );
+    }
+    fclose( fd );
+
     result = move( population[0] );
     population[0].data = nullptr;
     result.fitness_NSGA = population[0].fitness_NSGA;
 
-    printf( "%f\t%f\n", population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
+    printf( "%f\t%f\n", population[0].fitness_NSGA.second, -population[0].fitness_NSGA.first );
+}
+
+template <typename T>
+void NSGA<T>::save_front( std::vector<T> front )
+{
+//    std::string filename = "./../../test_outputs/front.csv";
+//    FILE *fd = fopen( filename.c_str(), "w+" );
+//    for( size_t i=0; i<front.size(); i++ ) {
+//        fprintf( fd, "%lf,%lf\n", front[i].fitness.first, front[i].fitness.second );
+//    }
+//    fclose( fd );
 }
 
 template <typename T>

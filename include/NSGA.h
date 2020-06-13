@@ -39,6 +39,7 @@ private:
     std::vector<std::vector<T>> nondominant_sort( std::vector<T> &population );
     bool is_dominant( std::pair<double, double> x, std::pair<double, double> y );
     void grouping_sort( std::vector<T> &front );
+    void save_front( std::vector<T> front );
 };
 
 #endif //GP_SCHEDULING_NSGA_H

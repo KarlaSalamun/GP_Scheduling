@@ -28,6 +28,8 @@ namespace plt = matplotlibcpp;
 
 void generate_csv(std::vector<double> results, std::vector<double> utils, std::string filename );
 void test_utils_qos( AbstractNode * heuristic );
+void test_utils_wCPU( AbstractNode * heuristic );
+void pareto_test( AbstractNode * heuristic );
 
 int main( void )
 {
@@ -36,44 +38,51 @@ int main( void )
     srand(static_cast<double> (time(NULL)) );
 
     TreeConstructor *tc = new TreeConstructor();
-////
-//    int population_size = 10;
-//    TreePopulation<TreeSolution<AbstractNode *>> *tp =
-//            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
-//    std::vector<TreeSolution<AbstractNode *>> population;
-//    tp->create_new_population( population );
 //
-//    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
-//    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
-//    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
-//
+    int population_size = 10;
+    TreePopulation<TreeSolution<AbstractNode *>> *tp =
+            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
+    std::vector<TreeSolution<AbstractNode *>> population;
+    tp->create_new_population( population );
+
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
+
 //    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 3 );
 //    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
 //
-////    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
-////    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
+    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
+    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
 //
 //    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
 //            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
-//    ga->get_solution( population, result );
 
-//    test_utils_qos( result.data );
+    auto *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover,
+            mutation, selection, testf, trainf, tp, 50, population_size, 0 );
+    ga->get_solution( population, result );
 
-    std::vector<Task *> pending;
+//    pareto_test( result.data );
 
-    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
-    taskc->set_time_slice( 1 );
-    taskc->load_tasks( pending );
+//    test_utils_wCPU( result.data );
 
-    tc->custom_tree( result.data );
+    test_utils_qos( result.data );
 
-    for( auto & element : pending ) {
-        element->initialize_task();
-    }
-
-    Scheduler *sched = new Scheduler();
-    taskc->compute_hyperperiod( pending );
-    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
+//    std::vector<Task *> pending;
+//
+//    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 100, 10, 10, 1 );
+//    taskc->set_time_slice( 1 );
+//    taskc->load_tasks( pending );
+//
+//    tc->custom_tree( result.data );
+//
+//    for( auto & element : pending ) {
+//        element->initialize_task();
+//    }
+//
+//    Scheduler *sched = new Scheduler();
+//    taskc->compute_hyperperiod( pending );
+//    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, true );
 //    sim->set_heuristic( result.data );
 //    sim->set_finish_time( taskc->get_hyperperiod() );
 //    sim->set_display();
@@ -96,32 +105,32 @@ int main( void )
 //    sim->compute_mean_skip_factor();
 //    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
 
-    taskc->set_task_number(4);
-    taskc->set_filename("./../../test_inputs/comparison.txt");
-    taskc->load_tasks( pending );
-    for( auto & element : pending ) {
-        element->initialize_task();
-    }
-    sim->set_pending( pending );
-    taskc->compute_hyperperiod( pending );
-    sim->set_finish_time( taskc->get_hyperperiod() );
-    sim->set_heuristic( result.data );
-    sim->run();
-    sim->compute_mean_skip_factor();
-    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
-
-    taskc->set_task_number(3);
-    taskc->set_filename("./../../test_inputs/test_2.txt");
-    taskc->load_tasks( pending );
-    for( auto & element : pending ) {
-        element->initialize_task();
-    }
-    sim->set_pending( pending );
-    taskc->compute_hyperperiod( pending );
-    sim->set_finish_time( taskc->get_hyperperiod() );
-    sim->run();
-    sim->compute_mean_skip_factor();
-    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
+//    taskc->set_task_number(4);
+//    taskc->set_filename("./../../test_inputs/comparison.txt");
+//    taskc->load_tasks( pending );
+//    for( auto & element : pending ) {
+//        element->initialize_task();
+//    }
+//    sim->set_pending( pending );
+//    taskc->compute_hyperperiod( pending );
+//    sim->set_finish_time( taskc->get_hyperperiod() );
+//    sim->set_heuristic( result.data );
+//    sim->run();
+//    sim->compute_mean_skip_factor();
+//    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
+//
+//    taskc->set_task_number(3);
+//    taskc->set_filename("./../../test_inputs/test_2.txt");
+//    taskc->load_tasks( pending );
+//    for( auto & element : pending ) {
+//        element->initialize_task();
+//    }
+//    sim->set_pending( pending );
+//    taskc->compute_hyperperiod( pending );
+//    sim->set_finish_time( taskc->get_hyperperiod() );
+//    sim->run();
+//    sim->compute_mean_skip_factor();
+//    printf( "gini: %lf, skip: %lf, qos: %lf\n", sim->compute_gini_coeff(), sim->get_mean_skip_factor(), sim->get_qos() );
 //
 //    std::vector<double> utils;
 //    std::vector<double> results;
@@ -234,5 +243,93 @@ void test_utils_qos( AbstractNode * heuristic )
         }
     }
 
-    generate_csv( mean_qos, actual_utils, "heur_qos.csv" );
+    generate_csv( mean_qos, actual_utils, "single_qos.csv" );
+}
+
+void test_utils_wCPU( AbstractNode * heuristic )
+{
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 20, 4, 2, 1 );
+    Scheduler *sched = new Scheduler();
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
+
+    sim->set_heuristic( heuristic );
+    std::vector<double> utils;
+    std::vector<double> results;
+
+    std::vector<Task *> test_tasks;
+
+    for( size_t i=0; i<=14; i++ ) {
+        utils.push_back( 0.90 + i * 0.05 );
+    }
+
+    std::vector<double> mean_qos;
+    std::vector<double> actual_utils;
+
+    for( size_t i=0; i<utils.size(); i++ ) {
+        taskc->set_overload(utils[i]);
+        taskc->set_task_number(6);
+//        double sum = 0;
+        for (size_t j = 0; j < 100; j++) {
+            do {
+                taskc->create_test_set(test_tasks);
+                taskc->compute_hyperperiod( test_tasks );
+            } while( taskc->get_hyperperiod() > 10000 );
+            double tmp_util = 0;
+            for( auto & element : test_tasks ) {
+                tmp_util += static_cast<double>( element->get_duration() ) / static_cast<double>( element->get_period() ) ;
+            }
+            actual_utils.push_back( tmp_util );
+            sim->set_pending(test_tasks);
+            sim->set_finish_time(taskc->get_hyperperiod());
+            sim->run();
+            mean_qos.push_back( sim->get_time_wasted() );
+        }
+    }
+
+    generate_csv( mean_qos, actual_utils, "heur_wCPU.csv" );
+}
+
+void pareto_test( AbstractNode * heuristic )
+{
+    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 20, 4, 2, 1 );
+    Scheduler *sched = new Scheduler();
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
+
+    sim->set_heuristic( heuristic );
+    std::vector<double> utils;
+    std::vector<double> results;
+
+    std::vector<Task *> test_tasks;
+
+    for( size_t i=0; i<=14; i++ ) {
+        utils.push_back( 0.90 + i * 0.05 );
+    }
+
+    std::vector<double> gini;
+    std::vector<double> skip;
+
+    for( size_t i=0; i<utils.size(); i++ ) {
+        taskc->set_overload(utils[i]);
+        taskc->set_task_number(6);
+//        double sum = 0;
+        for (size_t j = 0; j < 100; j++) {
+            do {
+                taskc->create_test_set(test_tasks);
+                taskc->compute_hyperperiod( test_tasks );
+            } while( taskc->get_hyperperiod() > 10000 );
+            double tmp_util = 0;
+            for( auto & element : test_tasks ) {
+                tmp_util += static_cast<double>( element->get_duration() ) / static_cast<double>( element->get_period() ) ;
+            }
+            if( tmp_util >= 0.9 && tmp_util <= 1.60 ) {
+                sim->set_pending(test_tasks);
+                sim->set_finish_time(taskc->get_hyperperiod());
+                sim->run();
+                skip.push_back( sim->compute_skip_fitness() );
+                gini.push_back( sim->compute_gini_coeff() );
+            }
+        }
+    }
+
+    generate_csv( gini, skip, "pareto_test1.csv" );
 }

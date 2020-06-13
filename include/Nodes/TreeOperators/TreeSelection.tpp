@@ -11,18 +11,18 @@
 
 template <typename T>
 void TreeSelection<T>::get_members( std::vector<T> &population, std::vector<T> &members ) {
-    std::vector<T> rand_members;
+//    std::vector<T> rand_members;
+//
+//    std::shuffle(population.begin(), population.begin() + 10, std::default_random_engine());
+//
+//    for (int i = 0; i < 5; i++) {
+//        rand_members.push_back( population[i] );
+//    }
+//
+//    qsort(rand_members.data(), rand_members.size(), sizeof(T), compare_members_descending<Solution<AbstractNode *>>);
 
-    std::shuffle(population.begin(), population.begin() + 10, std::default_random_engine());
-
-    for (int i = 0; i < 5; i++) {
-        rand_members.push_back( population[i] );
-    }
-
-    qsort(rand_members.data(), rand_members.size(), sizeof(T), compare_members_descending<Solution<AbstractNode *>>);
-
-    members[0] = move(rand_members[0]);
-    members[1] = move(rand_members[1]);
+    members[0] = population[0];
+    members[1] = population[1];
 }
 
 template <typename T>

@@ -41,6 +41,9 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
         std::vector<Task *> pending_tasks;
         std::vector<Task *> processed_tasks;
         static int compare_priority( const void *t1, const void *t2 );
+    private:
+        double compute_mean_fitness( std::vector<double> values );
+
 };
 
 #endif //GP_SCHEDULING_GPEVALUATEHEURISTIC_H
