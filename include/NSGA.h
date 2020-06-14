@@ -24,6 +24,22 @@ static int compare_distances(const void *m1, const void *m2)
 }
 
 template <typename T>
+static int compare_collaboration(const void *m1, const void *m2)
+{
+    const T* member1 = static_cast<const T *>(m1);
+    const T* member2 = static_cast<const T *>(m2);
+    if( member1->coev_fitness < member2->coev_fitness ) {
+        return -1;
+    }
+    else if( member1->coev_fitness == member2->coev_fitness ) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
+template <typename T>
 class NSGA : public GeneticAlgorithm<T> {
 public:
     NSGA( CrossoverOperator<T> *crossover, MutationOperator<T> *mutation,
@@ -33,12 +49,15 @@ public:
                              generation_number, population_size, dim_size ) {}
 
     void get_solution ( std::vector<T> &population, T& result );
+    virtual ~NSGA() = default;
 
 private:
     void evaluate_population ( std::vector<T> &population );
     std::vector<std::vector<T>> nondominant_sort( std::vector<T> &population );
     bool is_dominant( std::pair<double, double> x, std::pair<double, double> y );
     void grouping_sort( std::vector<T> &front );
+
+    void evaluate_member( T member );
 };
 
 #endif //GP_SCHEDULING_NSGA_H

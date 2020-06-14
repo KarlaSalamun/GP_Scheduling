@@ -43,10 +43,10 @@ class GeneticAlgorithm  {
 
         ~GeneticAlgorithm()
         {
-//            delete test_function;
-//            delete crossover;
-//            delete mutation;
-//            delete selection;
+            delete test_function;
+            delete crossover;
+            delete mutation;
+            delete selection;
         }
 
         void get_solution ( std::vector<T> &population, T& result );

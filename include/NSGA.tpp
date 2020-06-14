@@ -13,12 +13,25 @@ void NSGA<T>::evaluate_population ( std::vector<T> &population )
 }
 
 template <typename T>
+void NSGA<T>::evaluate_member( T member )
+{
+    this->train_function->get_value_NSGA( member, member.fitness_NSGA, false );
+}
+
+template <typename T>
 void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
 {
     std::vector<T> offspring;
     this->population->create_new_population( offspring );
 
     for ( size_t gen=0; gen<this->generation_number; gen++ ) {
+//        evaluate_population( offspring );
+//        for( auto & element : offspring ) {
+//            if( element.fitness_NSGA.second < 0 ) {
+//                population.push_back( std::move( element ));
+//            }
+//        }
+//        offspring.clear();
         std::copy( offspring.begin(), offspring.end(), std::back_inserter( population ) );
 
         evaluate_population( population );
@@ -35,7 +48,7 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
         std::vector<T> new_parents;
         size_t remaining_size = this->population_size;
         size_t i;
-        for( i=0; i<fronts.size(); i++ ) {
+        for( i=0; i<fronts.size()-1; i++ ) {
             if( fronts[i].size() > remaining_size ) {
                 break;
             }
@@ -65,15 +78,37 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
             tmp_parents.clear();
         }
 
-        population = new_parents;
+        population.clear();
+        for( auto & element : new_parents ) {
+            if( element.fitness_NSGA.second < 0 )
+                population.push_back( element );
+        }
+//        population = new_parents;
+//        population.clear();
+//        std::copy( new_parents.begin(), new_parents.end(), std::back_inserter( population ) );
+        qsort( population.data(), population.size(), sizeof(T), compare_collaboration<T> );
+        for( size_t j=0; j<population.size(); j++ ) {
+            double max_fitness = population[j].coev_fitness;
+            int max_index = 0;
+            for( size_t k=0; k<population.size(); k++ ) {
+                std::swap( population[j].data.first, population[k].data.second );
+                evaluate_member( population[j] );
+                if( population[j].coev_fitness < max_fitness ) {
+                    max_fitness = population[j].coev_fitness;
+                    max_index = k;
+                }
+            }
+            std::swap( population[j].data.second, population[max_index].data.second );
+        }
         assert( population.size() <= 2 * this->population_size );
         offspring = new_offspring;
 
-        printf( "generation: %zu\tdeviation: %f\tskip factor: %f\n", gen, population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second );
+        printf( "generation: %zu\tdeviation: %f\tskip factor: %f wasted: %f\n", gen, population[0].fitness_NSGA.first, -population[0].fitness_NSGA.second, population[0].coev_fitness );
     }
     evaluate_population(population );
 
-    this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
+//    this->train_function->get_value_NSGA( population[0], population[0].fitness_NSGA, true );
+    this->train_function->cleanup();
 
     result = move( population[0] );
     population[0].data.first = nullptr;

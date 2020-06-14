@@ -21,6 +21,7 @@ class Solution {
         std::vector<int> S;
         double d;
         int rank;
+        double coev_fitness;
 };
 
 #endif //PROJEKT_SOLUTION_H
