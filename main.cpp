@@ -53,7 +53,9 @@ int main( void )
 //    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 3 );
 //
     GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
+    testf->periodic = true;
     GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
+    trainf->periodic = true;
 //
 //    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
 //            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
@@ -64,9 +66,9 @@ int main( void )
 
 //    pareto_test( result.data );
 
-//    test_utils_wCPU( result.data );
+    test_utils_wCPU( result.data );
 
-    test_utils_qos( result.data );
+//    test_utils_qos( result.data );
 
 //    std::vector<Task *> pending;
 //
@@ -243,7 +245,7 @@ void test_utils_qos( AbstractNode * heuristic )
         }
     }
 
-    generate_csv( mean_qos, actual_utils, "single_qos.csv" );
+    generate_csv( mean_qos, actual_utils, "single_wCPU.csv" );
 }
 
 void test_utils_wCPU( AbstractNode * heuristic )
@@ -282,11 +284,11 @@ void test_utils_wCPU( AbstractNode * heuristic )
             sim->set_pending(test_tasks);
             sim->set_finish_time(taskc->get_hyperperiod());
             sim->run();
-            mean_qos.push_back( sim->get_time_wasted() );
+            mean_qos.push_back( sim->get_time_wasted() / taskc->get_hyperperiod() );
         }
     }
 
-    generate_csv( mean_qos, actual_utils, "heur_wCPU.csv" );
+    generate_csv( mean_qos, actual_utils, "single_wCPU.csv" );
 }
 
 void pareto_test( AbstractNode * heuristic )
