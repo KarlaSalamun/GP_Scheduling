@@ -86,20 +86,20 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
 //        population = new_parents;
 //        population.clear();
 //        std::copy( new_parents.begin(), new_parents.end(), std::back_inserter( population ) );
-        qsort( population.data(), population.size(), sizeof(T), compare_collaboration<T> );
-        for( size_t j=0; j<population.size(); j++ ) {
-            double max_fitness = population[j].coev_fitness;
-            int max_index = 0;
-            for( size_t k=0; k<population.size(); k++ ) {
-                std::swap( population[j].data.first, population[k].data.second );
-                evaluate_member( population[j] );
-                if( population[j].coev_fitness < max_fitness ) {
-                    max_fitness = population[j].coev_fitness;
-                    max_index = k;
-                }
-            }
-            std::swap( population[j].data.second, population[max_index].data.second );
-        }
+//        qsort( population.data(), population.size(), sizeof(T), compare_collaboration<T> );
+//        for( size_t j=0; j<population.size(); j++ ) {
+//            double max_fitness = population[j].coev_fitness;
+//            int max_index = 0;
+//            for( size_t k=0; k<population.size(); k++ ) {
+//                std::swap( population[j].data.second, population[k].data.second );
+//                evaluate_member( population[j] );
+//                if( population[j].coev_fitness < max_fitness ) {
+//                    max_fitness = population[j].coev_fitness;
+//                    max_index = k;
+//                }
+//            }
+//            std::swap( population[j].data.second, population[max_index].data.second );
+//        }
         assert( population.size() <= 2 * this->population_size );
         offspring = new_offspring;
 

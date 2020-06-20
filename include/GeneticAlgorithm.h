@@ -54,6 +54,10 @@ class GeneticAlgorithm  {
         void get_test_solutions( std::vector<double> &solutions );
         double evaluate_solution( Function<T> *test, T solution );
 
+        void set_generation_num( unsigned int num ) {
+            this->generation_number = num;
+        }
+
     protected:
         virtual void evaluate_population ( std::vector<T> &population );
         void add_members( std::vector<T> &population,std::vector<T> &members );

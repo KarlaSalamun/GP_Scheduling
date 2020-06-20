@@ -58,12 +58,90 @@ int main( void )
 //    GPEvaluateHeuristic *testf = new GPEvaluateHeuristic( 4 );
 //    GPEvaluateHeuristic *trainf = new GPEvaluateHeuristic( 4 );
 
+    std::vector<double> wasted;
+
     auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-            mutation, selection, nsga, nsga1, tp, 2, population_size, 0 );
+            mutation, selection, nsga, nsga1, tp, 50, population_size, 0 );
     ga->get_solution( population, result );
+//
+//    UunifastCreator *taskc = new UunifastCreator( 3, "./../../test_inputs/test_1.txt", true, 20, 4, 2, 1 );
+//    Scheduler *sched = new Scheduler();
+//    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
+//
+//    sim->set_heuristic( result.data );
+//    std::vector<double> utils;
+//    std::vector<double > generations;
+//
+//    generations.push_back( 1. );
+//
+//    std::vector<Task *> test_tasks;
+//
+//    for( size_t i=0; i<=14; i++ ) {
+//        utils.push_back( 0.90 + i * 0.05 );
+//    }
+//
+//    std::vector<double> actual_utils;
+//    double total_wasted = 0;
+//
+//    for( size_t i=0; i<utils.size(); i++ ) {
+//        taskc->set_overload(utils[i]);
+//        taskc->set_task_number(6);
+////        double sum = 0;
+//        for (size_t j = 0; j < 20; j++) {
+//            do {
+//                taskc->create_test_set(test_tasks);
+//                taskc->compute_hyperperiod( test_tasks );
+//            } while( taskc->get_hyperperiod() > 10000 );
+//            sim->set_pending(test_tasks);
+//            sim->set_finish_time(taskc->get_hyperperiod());
+//            sim->run();
+//            total_wasted+=sim->get_time_wasted() / taskc->get_hyperperiod();
+//            for( auto & element : test_tasks ) {
+//                delete element;
+//            }
+//        }
+//    }
+//    wasted.push_back( total_wasted / 20 );
+
+
+//    for( size_t i=5; i<= 50; i=i+5 ) {
+//        population.clear();
+//        total_wasted = 0;
+//        generations.push_back( static_cast<double>( i ) );
+//        ga->set_generation_num( i );
+//        tp->create_new_population( population );
+//        ga->get_solution( population, result );
+//        nsga->initialize();
+//        nsga1->initialize();
+//
+//        sim->set_heuristic( result.data );
+//
+////        for( size_t j=0; j<utils.size(); j++ ) {
+////            taskc->set_overload(utils[j]);
+////            taskc->set_task_number(6);
+////        double sum = 0;
+//            for (size_t k = 0; k < 20; k++) {
+//                do {
+//                    taskc->set_overload( 1.2 );
+//                    taskc->create_test_set(test_tasks);
+//                    taskc->compute_hyperperiod( test_tasks );
+//                } while( taskc->get_hyperperiod() > 10000 );
+//                sim->set_pending(test_tasks);
+//                sim->set_finish_time(taskc->get_hyperperiod());
+//                sim->run();
+//                total_wasted+=sim->get_time_wasted() / taskc->get_hyperperiod();
+//                for( auto & element : test_tasks ) {
+//                    delete element;
+//                }
+//            }
+////        }
+//        wasted.push_back( total_wasted / 20 );
+//    }
+//
+//    generate_csv( wasted, generations, "coev_gens.csv" );
 
     test_utils_wCPU( result.data );
-    test_utils_qos( result.data );
+//    test_utils_qos( result.data );
 
     delete ga;
 //    std::vector<Task *> pending;
