@@ -307,6 +307,8 @@ void test_utils_wCPU( std::pair<AbstractNode *, AbstractNode *> heuristic )
             sim->set_finish_time(taskc->get_hyperperiod());
             sim->run();
             mean_qos.push_back( sim->get_time_wasted() / taskc->get_hyperperiod() );
+            assert( sim->get_qos() >= 0.01 );
+            assert( sim->get_time_wasted() >= 0 );
             for( auto & element : test_tasks ) {
                 delete element;
             }

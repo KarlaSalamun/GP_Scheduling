@@ -36,48 +36,48 @@ void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, st
     std::vector<double> gini;
     std::vector<double> wasted;
 
-//    for( auto & element : test_sets ) {
-//        simulator->set_pending( element );
-//        tc->compute_hyperperiod( element );
-//        simulator->set_finish_time( tc->get_hyperperiod() );
-//        for( auto & sub : element ) {
-//            sub->initialize_task();
-//        }
-//        simulator->run();
-//        if( display ) {
-//            simulator->display_info();
-//        }
-//        gini.push_back( simulator->compute_gini_coeff() );
-//        assert( simulator->compute_gini_coeff() == simulator->compute_gini_coeff() );
-//        assert( simulator->compute_skip_fitness() == simulator->compute_skip_fitness() );
-//        if( simulator->get_completed() == 0 ) {
-//            skip.push_back( 0 );
-//        }
-//        else {
-//            skip.push_back( simulator->compute_skip_fitness() );
-//        }
-//        wasted.push_back( simulator->get_time_wasted() / tc->get_hyperperiod() );
-//    }
-
-    std::vector<double> utils = { 0.90, 1, 1.1, 1.2, 1.3, 1.4 };
-
-    for( size_t i = 0; i<5; i++) {
-        for( size_t j=0; j<utils.size(); j++ ) {
-            tc->set_overload( utils[j] );
-            tc->set_task_number( 6 );
-            tc->create_test_set( test_tasks );
-            tc->compute_hyperperiod( test_tasks );
-            simulator->set_pending( test_tasks );
-            simulator->set_finish_time( tc->get_hyperperiod() );
-            simulator->run();
-            wasted.push_back( simulator->get_time_wasted() / tc->get_hyperperiod());
-            if( display ) {
-                simulator->display_info();
-            }
-            gini.push_back( simulator->compute_gini_coeff() );
+    for( auto & element : test_sets ) {
+        simulator->set_pending( element );
+        tc->compute_hyperperiod( element );
+        simulator->set_finish_time( tc->get_hyperperiod() );
+        for( auto & sub : element ) {
+            sub->initialize_task();
+        }
+        simulator->run();
+        if( display ) {
+            simulator->display_info();
+        }
+        gini.push_back( simulator->compute_gini_coeff() );
+        assert( simulator->compute_gini_coeff() == simulator->compute_gini_coeff() );
+        assert( simulator->compute_skip_fitness() == simulator->compute_skip_fitness() );
+        if( simulator->get_completed() == 0 ) {
+            skip.push_back( 0 );
+        }
+        else {
             skip.push_back( simulator->compute_skip_fitness() );
         }
+        wasted.push_back( simulator->get_time_wasted() / tc->get_hyperperiod() );
     }
+
+//    std::vector<double> utils = { 0.90, 1, 1.1, 1.2, 1.3, 1.4 };
+//
+//    for( size_t i = 0; i<5; i++) {
+//        for( size_t j=0; j<utils.size(); j++ ) {
+//            tc->set_overload( utils[j] );
+//            tc->set_task_number( 6 );
+//            tc->create_test_set( test_tasks );
+//            tc->compute_hyperperiod( test_tasks );
+//            simulator->set_pending( test_tasks );
+//            simulator->set_finish_time( tc->get_hyperperiod() );
+//            simulator->run();
+//            wasted.push_back( simulator->get_time_wasted() / tc->get_hyperperiod());
+//            if( display ) {
+//                simulator->display_info();
+//            }
+//            gini.push_back( simulator->get_time_wasted() / tc->get_hyperperiod() );
+//            skip.push_back( simulator->compute_skip_fitness() );
+//        }
+//    }
 
 //    if( islessequal( fabs( compute_mean_fitness( skip ) ), 0.1 ) ) {
 //        fitness = std::make_pair( 10, -10 );
@@ -86,7 +86,7 @@ void GPEvaluate_NSGA::get_value_NSGA( TreeSolution<AbstractNode *> &solution, st
 
 
     solution.coev_fitness = compute_mean_fitness( wasted );
-    fitness = std::make_pair( compute_mean_fitness( gini ), -compute_mean_fitness( skip ) );
+    fitness = std::make_pair( compute_mean_fitness( wasted ), -compute_mean_fitness( skip ) );
 
     delete simulator;
     delete sched;
