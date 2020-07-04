@@ -22,17 +22,17 @@ class DivNode : public AbstractNode {
             copy = new DivNode( *this );
         }
 
-        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *>processed_tasks ) override
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *>processed_tasks, size_t time ) override
         {
-            return children[0]->calculate_priority( task, pending_tasks, processed_tasks ) /
-                children[1]->calculate_priority( task, pending_tasks, processed_tasks );
+            return children[0]->calculate_priority( task, pending_tasks, processed_tasks, time ) /
+                children[1]->calculate_priority( task, pending_tasks, processed_tasks, time );
         }
 
         void execute( void *ctx ) override
         {
             struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
-            double tmp_result = children[1]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed );
-            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed )
+            double tmp_result = children[1]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed, ctx_->time );
+            ctx_->task->set_priority( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed, ctx_->time )
                                       / ( std::isgreater( fabs(tmp_result), 0 ) ? tmp_result : 1 ) );
         }
 };

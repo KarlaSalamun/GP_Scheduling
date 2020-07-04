@@ -22,7 +22,7 @@ class WNode : public AbstractNode {
             copy = new WNode( *this );
         }
 
-        double calculate_priority( Task *&task, std::vector<Task *>, std::vector<Task *> ) {
+        double calculate_priority( Task *&task, std::vector<Task *>, std::vector<Task *>, size_t ) {
             return task->get_weight();
         }
 

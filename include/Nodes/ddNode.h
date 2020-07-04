@@ -21,7 +21,7 @@ class ddNode : public AbstractNode {
             copy = new ddNode( *this );
         }
 
-        double calculate_priority( Task *&task, std::vector<Task *> , std::vector<Task *> ) {
+        double calculate_priority( Task *&task, std::vector<Task *> , std::vector<Task *>, size_t ) {
             return task->get_abs_due_date();
         }
 

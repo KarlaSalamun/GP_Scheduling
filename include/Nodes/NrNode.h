@@ -22,7 +22,7 @@ class NrNode : public AbstractNode {
             copy = new NrNode( *this );
         }
 
-        double calculate_priority( Task *&, std::vector<Task *> pending_tasks, std::vector<Task *> ) {
+        double calculate_priority( Task *&, std::vector<Task *> pending_tasks, std::vector<Task *>, size_t ) {
             return pending_tasks.size();
         }
 

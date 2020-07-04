@@ -21,7 +21,7 @@ class SPrNode : public AbstractNode {
             copy = new SPrNode( *this );
         }
 
-        double calculate_priority( Task *&, std::vector<Task *> pending_tasks, std::vector<Task *> ) {
+        double calculate_priority( Task *&, std::vector<Task *> pending_tasks, std::vector<Task *>, size_t ) {
 
             double sum = 0;
             for( auto & element : pending_tasks ) {

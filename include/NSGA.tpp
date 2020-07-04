@@ -83,8 +83,10 @@ void NSGA<T>::get_solution ( std::vector<T> &population, T& result )
 
     std::string filename = "./../../test_outputs/front.csv";
     FILE *fd = fopen( filename.c_str(), "w+" );
-    for( size_t i=0; i<fronts[0].size(); i++ ) {
-        fprintf( fd, "%lf,%lf\n", fronts[0][i].fitness_NSGA.first, -fronts[0][i].fitness_NSGA.second );
+    for( size_t i=0; i<fronts.size(); i++ ) {
+        for( size_t j=0; j<fronts[i].size(); j++ ) {
+            fprintf( fd, "%zu,%lf,%lf\n", i, fronts[i][j].fitness_NSGA.first, -fronts[i][j].fitness_NSGA.second );
+        }
     }
     fclose( fd );
 

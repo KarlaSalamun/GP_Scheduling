@@ -21,13 +21,13 @@ class PosNode : public AbstractNode {
             copy = new PosNode( *this );
         }
 
-        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks ) {
-            return std::max( children[0]->calculate_priority( task, pending_tasks, processed_tasks ), 0. );
+        double calculate_priority( Task *&task, std::vector<Task *> pending_tasks, std::vector<Task *> processed_tasks, size_t time ) {
+            return std::max( children[0]->calculate_priority( task, pending_tasks, processed_tasks, time ), 0. );
         }
 
         void execute( void *ctx ) {
             struct task_ctx *ctx_ = reinterpret_cast<struct task_ctx *>(ctx);
-            ctx_->task->set_priority( std::max( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed ), 0. ));
+            ctx_->task->set_priority( std::max( children[0]->calculate_priority( ctx_->task, ctx_->pending, ctx_->processed, ctx_->time ), 0. ));
         }
 };
 

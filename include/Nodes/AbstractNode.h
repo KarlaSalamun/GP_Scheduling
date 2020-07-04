@@ -25,7 +25,7 @@ class AbstractNode {
         virtual ~AbstractNode();
 
         virtual double calculate_priority ( Task *&task, std::vector<Task *> pending_tasks,
-                std::vector<Task *> processed_tasks ) = 0;
+                std::vector<Task *> processed_tasks, size_t time ) = 0;
 
         virtual void execute( void* ) = 0;
 

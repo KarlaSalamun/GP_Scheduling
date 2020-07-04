@@ -35,6 +35,9 @@ class GPEvaluateHeuristic : public Function<TreeSolution<AbstractNode *>> {
             test_tasks = tasks;
         }
         bool periodic;
+        void create_test_set();
+
+        std::vector<std::vector<Task *>>test_sets;
     protected:
         int task_number;
         std::vector<Task *> test_tasks;

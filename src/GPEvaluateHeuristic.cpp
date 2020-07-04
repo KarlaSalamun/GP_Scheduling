@@ -11,6 +11,21 @@
 #include "AbstractNode.h"
 #include "GPEvaluateHeuristic.h"
 
+void GPEvaluateHeuristic::create_test_set()
+{
+    UunifastCreator *tc = new UunifastCreator( task_number, "./../../test_inputs/test_1.txt", false, 30, 10, 5, 1 );
+    std::vector<double> utils = { 0.90, 1, 1.1, 1.2, 1.3, 1.4 };
+
+    for( size_t i = 0; i<5; i++) {
+        for( size_t j=0; j<utils.size(); j++ ) {
+            tc->set_overload( utils[j] );
+            tc->set_task_number( 6 );
+            tc->create_test_set( test_tasks );
+            test_sets.push_back( test_tasks );
+        }
+    }
+}
+
 double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
 {
     double twt = 0;
@@ -33,19 +48,12 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
         std::vector<double> skip;
         std::vector<double> gini;
 
-        std::vector<double> utils = { 0.90, 1, 1.1, 1.2, 1.3, 1.4 };
-
-        for( size_t i = 0; i<5; i++) {
-            for( size_t j=0; j<utils.size(); j++ ) {
-                tc->set_overload( utils[j] );
-                tc->set_task_number( 6 );
-                tc->create_test_set( test_tasks );
-                tc->compute_hyperperiod( test_tasks );
-                simulator->set_pending( test_tasks );
-                simulator->set_finish_time( tc->get_hyperperiod() );
-                simulator->run();
-                skip.push_back( simulator->compute_skip_fitness() );
-            }
+        for( size_t i = 0; i<test_sets.size(); i++) {
+            tc->compute_hyperperiod( test_sets[i] );
+            simulator->set_pending( test_sets[i] );
+            simulator->set_finish_time( tc->get_hyperperiod() );
+            simulator->run();
+            skip.push_back( simulator->compute_skip_fitness() );
         }
 
         return compute_mean_fitness( skip );;
@@ -57,7 +65,7 @@ double GPEvaluateHeuristic::get_value( TreeSolution<AbstractNode *> &solution )
                 pending_tasks[i]->set_priority( solution.data->calculate_priority(
                         reinterpret_cast<Task *&>(pending_tasks[i]),
                         reinterpret_cast<const std::vector<Task *> &>(pending_tasks),
-                        reinterpret_cast<const std::vector<Task *> &>(processed_tasks)) );
+                        reinterpret_cast<const std::vector<Task *> &>(processed_tasks), 0) );
             }
 
             std::sort( pending_tasks.begin(), pending_tasks.end(),
