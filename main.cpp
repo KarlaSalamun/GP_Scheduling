@@ -36,73 +36,66 @@ int main( void )
 
     TreeConstructor *tc = new TreeConstructor();
 
-    AbstractNode *test;
-    tc->construct_tree_grow( 5, test );
-    tc->draw_tree( test, "grow.dot" );
+    int population_size = 50;
+    TreePopulation<TreeSolution<AbstractNode *>> *tp =
+            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
 
-    tc->construct_tree_full( 5, test );
-    tc->draw_tree( test, "full.dot" );
+    TreePopulation<TreeSolution<AbstractNode *>> *test_popul = new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
+    // TODO stavi ovo u funkciju
+    std::vector<TreeSolution<AbstractNode *>> population;
+    tp->create_new_population( population );
 
-//    int population_size = 50;
-//    TreePopulation<TreeSolution<AbstractNode *>> *tp =
-//            new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
-//
-//    TreePopulation<TreeSolution<AbstractNode *>> *test_popul = new TreePopulation<TreeSolution<AbstractNode *>>( population_size, tc );
-//    // TODO stavi ovo u funkciju
-//    std::vector<TreeSolution<AbstractNode *>> population;
-//    tp->create_new_population( population );
-//
-//    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
-//    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
-//    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
-//
-//    GPEvaluateHeuristic *test = new GPEvaluateHeuristic(2);
-//    GPEvaluateHeuristic *train = new GPEvaluateHeuristic( 2 );
-//
-////    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 2 );
-////    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 2 );
-//
-//    auto *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover, mutation, selection, test, train, test_popul, 50, population_size, 0 );
-//
-////    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
-////            mutation, selection, nsga, nsga1, tp, 100, population_size, 0 );
-//    ga->get_solution( population, result );
-//
-//    std::vector<Task *> pending;
-//
-//    UunifastCreator *taskc = new UunifastCreator( 2, "./../../test_inputs/task_set.txt", true, 100, 10, 10, 1 );
-//    taskc->set_time_slice( 1 );
-//    taskc->load_tasks( pending );
-//
-//    std::vector<double> durations;
-//    for( auto & element : pending ) {
-//        durations.push_back( element->get_duration() );
-//        assert( element->get_duration() != 0 );
-//    }
-//
-//    Scheduler *sched = new Scheduler();
-//    taskc->compute_hyperperiod( pending );
-//    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
-//    sim->set_heuristic( result.data );
+    TreeMutation<TreeSolution<AbstractNode *>> *mutation = new TreeMutation<TreeSolution<AbstractNode *>>();
+    TreeSelection<TreeSolution<AbstractNode *>> *selection = new TreeSelection<TreeSolution<AbstractNode *>>();
+    TreeCrossover<TreeSolution<AbstractNode *>> *crossover = new TreeCrossover<TreeSolution<AbstractNode *>>();
 
-//    for( int overload = 90; overload <= 160; overload = overload + 5 ) {
-//        std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
-//        taskc->set_filename( tmp );
-//        taskc->load_tasks( pending );
-////        overload_values.push_back( overload );
-//        double util = 0;
-////        taskc->set_overload( overload );
-////        taskc->compute_overloaded( pending, durations );
-//        for( auto & element : pending ) {
-//            element->initialize_task();
-//            util += element->get_duration() / element->get_period();
-//        }
-//        printf( "%f\n", util );
-//        sim->set_finish_time( taskc->get_hyperperiod() );
-//        sim->set_pending( pending );
-//        sim->run();
-//        printf( "overload: %d\ttard:%f\tmissed:%d\n", overload, sim->get_total_tardiness(), sim->get_missed() );
-//    }
+    GPEvaluateHeuristic *test = new GPEvaluateHeuristic(2);
+    GPEvaluateHeuristic *train = new GPEvaluateHeuristic( 2 );
+
+//    GPEvaluate_NSGA *nsga = new GPEvaluate_NSGA( 2 );
+//    GPEvaluate_NSGA *nsga1 = new GPEvaluate_NSGA( 2 );
+
+    auto *ga = new GeneticAlgorithm<TreeSolution<AbstractNode *>>( crossover, mutation, selection, test, train, test_popul, 50, population_size, 0 );
+
+//    auto *ga = new NSGA<TreeSolution<AbstractNode *>>( crossover,
+//            mutation, selection, nsga, nsga1, tp, 100, population_size, 0 );
+    ga->get_solution( population, result );
+
+    std::vector<Task *> pending;
+
+    UunifastCreator *taskc = new UunifastCreator( 2, "./../../test_inputs/task_set.txt", true, 100, 10, 10, 1 );
+    taskc->set_time_slice( 1 );
+    taskc->load_tasks( pending );
+
+    std::vector<double> durations;
+    for( auto & element : pending ) {
+        durations.push_back( element->get_duration() );
+        assert( element->get_duration() != 0 );
+    }
+
+    Scheduler *sched = new Scheduler();
+    taskc->compute_hyperperiod( pending );
+    Simulator<AbstractNode *> *sim = new Simulator<AbstractNode *>( 1, taskc->get_hyperperiod(), taskc, sched, true, false );
+    sim->set_heuristic( result.data );
+
+    for( int overload = 90; overload <= 160; overload = overload + 5 ) {
+        std::string tmp = "./../../test_inputs/" + std::to_string( overload ) + ".txt";
+        taskc->set_filename( tmp );
+        taskc->load_tasks( pending );
+//        overload_values.push_back( overload );
+        double util = 0;
+//        taskc->set_overload( overload );
+//        taskc->compute_overloaded( pending, durations );
+        for( auto & element : pending ) {
+            element->initialize_task();
+            util += element->get_duration() / element->get_period();
+        }
+        printf( "%f\n", util );
+        sim->set_finish_time( taskc->get_hyperperiod() );
+        sim->set_pending( pending );
+        sim->run();
+        printf( "overload: %d\ttard:%f\tmissed:%d\n", overload, sim->get_total_tardiness(), sim->get_missed() );
+    }
 
     /*
     GPEvaluateHeuristic *test_function = new GPEvaluateHeuristic( 4 );
